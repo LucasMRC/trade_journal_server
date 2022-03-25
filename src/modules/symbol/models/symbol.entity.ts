@@ -1,6 +1,6 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
-import { BaseEntity } from '../../base/base.entity';
-import { AssetEntity } from '../../asset/models/asset.entity';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { BaseEntity } from '@modules/base/base.entity';
+import { AssetEntity } from '@modules/asset/models/asset.entity';
 
 @Entity('symbol')
 export class SymbolEntity extends BaseEntity {
@@ -13,7 +13,7 @@ export class SymbolEntity extends BaseEntity {
     @Column()
         name: string;
 
-    @JoinColumn()
-    @OneToOne(() => AssetEntity)
+    @JoinColumn({ name: 'asset_id' })
+    @ManyToOne(() => AssetEntity)
         asset: AssetEntity;
 }

@@ -1,11 +1,12 @@
-import { injectable, container } from 'tsyringe';
+import { getCustomRepository } from 'typeorm';
+import { injectable } from 'tsyringe';
 
 // Modules
-import { SymbolDTO, SymbolRepository, SymbolEntity } from '@modules/symbol';
+import { SymbolDTO, SymbolRepository } from '@modules/symbol';
+import { AssetRepository } from '@modules/asset';
 
 // Utils
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
-import { AssetRepository } from '@modules/asset';
 
 @injectable()
 export class SymbolService {
@@ -14,27 +15,55 @@ export class SymbolService {
     private assetRepository: AssetRepository;
 
     constructor() {
-        this.symbolRepository = container.resolve(SymbolRepository);
-        this.assetRepository = container.resolve(AssetRepository);
+        this.symbolRepository = getCustomRepository(SymbolRepository);
+        this.assetRepository = getCustomRepository(AssetRepository);
     }
 
     async createNewSymbol(symbolDTO: SymbolDTO) {
         const { name } = symbolDTO;
-        await this.failIfAssetNameIsNotAvailable(name);
+        const asset = await this.failIfSymbolNameIsNotAvailableOrReturnAsset(symbolDTO);
+        // App's convention: symbol names are uppercase
+        const uppercasedName = name.toUpperCase();
 
-        const currentAsset = await this.assetRepository.findOneOrFail(symbolDTO.assetId);
-
-        const newSymbol = new SymbolEntity(name, currentAsset);
-        return this.symbolRepository.save(newSymbol);
+        return this.symbolRepository.createNew(uppercasedName, asset);
     }
 
-    async failIfAssetNameIsNotAvailable(symbolName: string) {
-        const asset = await this.symbolRepository.findOne({
+    async getSymbols() {
+        const symbols = await this.symbolRepository.fetchSymbols();
+        return symbols;
+    }
+
+    async udpateSymbol(symbolId: number, symbolDTO: Partial<SymbolDTO>) {
+        const { name } = symbolDTO;
+
+        if (name)
+            symbolDTO.name = name.toUpperCase();
+
+        return await this.symbolRepository.updateSymbol(symbolId, symbolDTO);
+    }
+
+    async deleteSymbol(symbolId: number) {
+        return await this.symbolRepository.deleteSymbol(symbolId);
+    }
+
+    private async failIfSymbolNameIsNotAvailableOrReturnAsset(symbolDTO: SymbolDTO) {
+        const { assetId, name } = symbolDTO;
+
+        const currentAsset = await this.assetRepository.findOne({
             where: {
-                name: symbolName.toLowerCase()
+                id: assetId
+            }
+        });
+        if (!currentAsset) throw new ErrorWithStatus(`There's no asset with id ${assetId}`, 400);
+
+        const symbol = await this.symbolRepository.findOne({
+            where: {
+                name: name.toUpperCase()
             }
         });
 
-        if (asset) throw new ErrorWithStatus(`There's already an symbol named ${symbolName}`, 400);
+        if (symbol) throw new ErrorWithStatus(`There's already an symbol named ${name}`, 400);
+
+        return currentAsset;
     }
 }

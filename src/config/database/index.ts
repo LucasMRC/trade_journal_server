@@ -2,14 +2,14 @@ import { ConnectionOptions } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 // Modules
-import { PlatformEntity } from '@modules/platform/models/platform.entity';
-import { TimeframeEntity } from '@modules/timeframe/models/timeframe.entity';
+import { PlatformEntity } from '@modules/platform/';
+import { TimeframeEntity } from '@modules/timeframe';
 import { TradeEntity } from '@modules/trade/models/trade.entity';
 import { SymbolEntity } from '@modules/symbol';
 import { AssetEntity } from '@modules/asset';
-import { OutcomeEntity } from '@modules/outcome/models/outcome.entity';
-import { WithdrawalEntity } from '@modules/withdrawal/models/withdrawal.entity';
-import { DepositEntity } from '@modules/deposit/models/deposit.entity';
+import { OutcomeEntity } from '@modules/outcome';
+import { WithdrawalEntity } from '@modules/withdrawal';
+import { DepositEntity } from '@modules/deposit';
 import { BlowUpEntity } from '@modules/blow_up/models/blow_up.entity';
 import { UserEntity } from '@modules/user/models/user.entity';
 

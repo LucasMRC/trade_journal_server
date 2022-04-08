@@ -21,8 +21,8 @@ export default (app: Application) => {
     app.use('/timeframes', TimeframeRoutes);
     app.use('/withdrawals', WithdrawalRoutes);
     app.use('/outcomes', OutcomeRoutes);
-    app.use('/blowUps', BlowUpRoutes);
+    app.use('/blow-ups', BlowUpRoutes);
     app.use('/symbols', SymbolRoutes);
-    app.use('/deposit', DepositRoutes);
+    app.use('/deposits', DepositRoutes);
     app.use('/trades', TradeRoutes);
 };

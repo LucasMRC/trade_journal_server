@@ -1,9 +1,17 @@
 
 import { Router } from 'express';
-import { getAllPlatfoms } from '../controller/index';
+import {
+    getAllPlatforms,
+    createNewPlatform,
+    deletePlatform,
+    updatePlatform
+} from '@modules/platform/controller/platform.controller';
 
 const router = Router();
 
-router.get('/', getAllPlatfoms);
+router.post('/create', createNewPlatform);
+router.get('/', getAllPlatforms);
+router.delete('/:id', deletePlatform);
+router.put('/:id', updatePlatform);
 
 export default router;

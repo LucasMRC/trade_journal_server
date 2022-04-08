@@ -1,14 +1,15 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { instanceToInstance } from 'class-transformer';
+import { injectable } from 'tsyringe';
 
 // Modules
-import { SymbolEntity } from '@modules/symbol/models/symbol.entity';
-import { SymbolDTO } from '@modules/symbol/models/symbol.dto';
+import { SymbolEntity, SymbolDTO } from '@modules/symbol';
+import { AssetEntity } from '@modules/asset';
 
 // Utils
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
-import { AssetEntity } from '../../asset/models/asset.entity';
 
+@injectable()
 @EntityRepository(SymbolEntity)
 export class SymbolRepository extends Repository<SymbolEntity> {
     async createNew(symbolName: string, asset: AssetEntity) {

@@ -6,7 +6,6 @@ import { SymbolService, SymbolDTO } from '@modules/symbol';
 
 // Utils
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
-import isNumber from '@utils/functions/isNumber';
 
 export const createNewSymbol = async (req: Request, res: Response, next: NextFunction) => {
     const symbolDTO: SymbolDTO = req.body;
@@ -33,11 +32,12 @@ export const getSymbols = async (_req: Request, res: Response, next: NextFunctio
 /* TODO: Add find filters */
 export const deleteSymbol = async (req: Request, res: Response, next: NextFunction) => {
     const { id: symbolId } = req.params;
+    const idAsNumber = Number(symbolId);
+    if (!idAsNumber) throw new ErrorWithStatus('Symbol id is not a valid number', 400);
 
     const symbolService = await container.resolve(SymbolService);
     try {
-        if (!isNumber(symbolId)) throw new ErrorWithStatus('Symbol id is not a valid number', 400);
-        const response = await symbolService.deleteSymbol(symbolId);
+        const response = await symbolService.deleteSymbol(idAsNumber);
         res.send(response);
     } catch(ex: unknown) {
         next(ex);
@@ -47,12 +47,13 @@ export const deleteSymbol = async (req: Request, res: Response, next: NextFuncti
 /* TODO: Add find filters */
 export const updateSymbol = async (req: Request, res: Response, next: NextFunction) => {
     const { id: symbolId } = req.params;
+    const idAsNumber = Number(symbolId);
+    if (!idAsNumber) throw new ErrorWithStatus('Symbol id is not a valid number', 400);
 
     const symbolDTO: Partial<SymbolDTO> = req.body;
     const symbolService = container.resolve(SymbolService);
     try {
-        if (!isNumber(symbolId)) throw new ErrorWithStatus('Symbol id is not a valid number', 400);
-        const response = await symbolService.udpateSymbol(symbolId, symbolDTO);
+        const response = await symbolService.udpateSymbol(idAsNumber, symbolDTO);
         res.send(response);
     } catch(ex: unknown) {
         next(ex);

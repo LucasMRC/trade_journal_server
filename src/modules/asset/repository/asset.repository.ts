@@ -1,11 +1,15 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { instanceToInstance } from 'class-transformer';
+import { injectable } from 'tsyringe';
 
 // Modules
 import { AssetEntity } from '@modules/asset/models/asset.entity';
 import { AssetDTO } from '@modules/asset/models/asset.dto';
-import ErrorWithStatus from '../../../utils/errors/ErrorWithStatus';
 
+// Utils
+import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
+
+@injectable()
 @EntityRepository(AssetEntity)
 export class AssetRepository extends Repository<AssetEntity> {
     async createNew(assetDTO: AssetDTO) {

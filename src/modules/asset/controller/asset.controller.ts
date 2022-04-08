@@ -7,7 +7,6 @@ import { AssetDTO } from '@modules/asset/models/asset.dto';
 import { AssetService } from '@modules/asset/service/asset.service';
 
 // Utils
-import isNumber from '@utils/functions/isNumber';
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 
 export const createNewAsset = async (req: Request, res: Response, next: NextFunction) => {
@@ -35,11 +34,12 @@ export const getAssets = async (_req: Request, res: Response, next: NextFunction
 /* TODO: Add find filters */
 export const deleteAsset = async (req: Request, res: Response, next: NextFunction) => {
     const { id: assetId } = req.params;
+    const idAsNumber = Number(assetId);
+    if (!idAsNumber) throw new ErrorWithStatus('Asset id is not a valid number', 400);
 
     const assetService = container.resolve(AssetService);
     try {
-        if (!isNumber(assetId)) throw new ErrorWithStatus('Asset id is not a valid number', 400);
-        const response = await assetService.deleteAsset(assetId);
+        const response = await assetService.deleteAsset(idAsNumber);
         res.send(response);
     } catch(ex: unknown) {
         next(ex);
@@ -49,12 +49,13 @@ export const deleteAsset = async (req: Request, res: Response, next: NextFunctio
 /* TODO: Add find filters */
 export const updateAsset = async (req: Request, res: Response, next: NextFunction) => {
     const { id: assetId } = req.params;
+    const idAsNumber = Number(assetId);
+    if (!idAsNumber) throw new ErrorWithStatus('Asset id is not a valid number', 400);
 
     const assetDTO: Partial<AssetDTO> = req.body;
     const assetService = container.resolve(AssetService);
     try {
-        if (!isNumber(assetId)) throw new ErrorWithStatus('Asset id is not a valid number', 400);
-        const response = await assetService.udpateAsset(assetId, assetDTO);
+        const response = await assetService.udpateAsset(idAsNumber, assetDTO);
         res.send(response);
     } catch(ex: unknown) {
         next(ex);

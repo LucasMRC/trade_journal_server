@@ -5,7 +5,7 @@ import { PlatformEntity } from '../../platform/models/platform.entity';
 
 @Entity('blow_up')
 export class BlowUpEntity extends BaseEntity {
-    @Column({ default: () => 'NOW()' })
+    @Column({ nullable: true })
         date: Date;
 
     @JoinColumn()

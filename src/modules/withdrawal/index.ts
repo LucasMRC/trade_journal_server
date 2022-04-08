@@ -1,10 +1,14 @@
 
-import { WithdrawalEntity } from '@modules/withdrawal/models/withdrawal.entity';
+import { WithdrawalEntity } from './models/withdrawal.entity';
+import { WithdrawalDTO } from './models/withdrawal.dto';
 import { WithdrawalRepository } from './repository/withdrawal.repository';
-import WithdrawalRoutes from '@modules/withdrawal/routes/withdrawal.routes';
+import { WithdrawalService } from './service/withdrawal.service';
+import WithdrawalRoutes from './routes/withdrawal.routes';
 
 export {
     WithdrawalEntity,
+    WithdrawalDTO,
+    WithdrawalService,
     WithdrawalRepository,
     WithdrawalRoutes
 };

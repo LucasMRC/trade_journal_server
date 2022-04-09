@@ -9,3 +9,13 @@ export class DecimalTransformer implements ValueTransformer {
         return decimal ? parseFloat(decimal) : null;
     }
 }
+
+export class DateTransformer implements ValueTransformer {
+    to(date: string): Date | null {
+        return date ? new Date(date) : null;
+    }
+
+    from(date: Date): string {
+        return date.toISOString().split('T')[0];
+    }
+}

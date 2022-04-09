@@ -5,7 +5,7 @@ import { PlatformDTO } from '../models/platform.dto';
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 
 export const createNewPlatform = async (req: Request, res: Response, next: NextFunction) => {
-    const platformDto: PlatformDTO = new PlatformDTO(req.body);
+    const platformDto: PlatformDTO = req.body;
     const platformService = container.resolve(PlatformService);
     try {
         const response = await platformService.createNewPlatform(platformDto);
@@ -23,13 +23,13 @@ export const getAllPlatforms = async (_req: Request, res: Response) => {
 };
 
 export const deletePlatform = async (req: Request, res: Response, next: NextFunction) => {
-    const { id: platformId } = req.params;
-    const idAsNumber = Number(platformId);
-    if (!idAsNumber) throw new ErrorWithStatus('Platform id is not a valid number', 400);
+    const { id: platform_id } = req.params;
+    const id_as_number = Number(platform_id);
+    if (!id_as_number) throw new ErrorWithStatus('Platform id is not a valid number', 400);
 
     const platformService = container.resolve(PlatformService);
     try {
-        await platformService.deletePlatform(idAsNumber);
+        await platformService.deletePlatform(id_as_number);
         res.send('deleted');
     } catch (ex) {
         next(ex);
@@ -37,15 +37,15 @@ export const deletePlatform = async (req: Request, res: Response, next: NextFunc
 };
 
 export const updatePlatform = async (req: Request, res: Response, next: NextFunction) => {
-    const { id: platformId } = req.params;
+    const { id: platform_id } = req.params;
     const platformDto: Partial<PlatformDTO> = req.body;
 
-    const idAsNumber = Number(platformId);
-    if (!idAsNumber) throw new ErrorWithStatus('Platform id is not a valid number', 400);
+    const id_as_number = Number(platform_id);
+    if (!id_as_number) throw new ErrorWithStatus('Platform id is not a valid number', 400);
 
     const platformService = container.resolve(PlatformService);
     try {
-        const response = await platformService.updatePlatform(idAsNumber, platformDto);
+        const response = await platformService.updatePlatform(id_as_number, platformDto);
         res.send(response);
     } catch (ex) {
         next(ex);

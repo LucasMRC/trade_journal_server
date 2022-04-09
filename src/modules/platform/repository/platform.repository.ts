@@ -13,7 +13,13 @@ import ErrorWithStatus from '@src/utils/errors/ErrorWithStatus';
 export class PlatformRepository extends Repository<PlatformEntity> {
 
     async createNew(platformDTO: PlatformDTO) {
-        const newPlatform: PlatformEntity = await this.save(platformDTO);
+        const { name, current_amount, initial_amount } = platformDTO;
+        const newPlatform: PlatformEntity = this.create({
+            name,
+            initial_amount: initial_amount || 0,
+            current_amount: current_amount || initial_amount || 0
+        });
+        await this.save(newPlatform);
         return plainToInstance(PlatformEntity, newPlatform);
     }
 
@@ -22,19 +28,19 @@ export class PlatformRepository extends Repository<PlatformEntity> {
         return instanceToInstance(platforms);
     }
 
-    async deletePlatform(platformId: number) {
-        const platform = this.findOne(platformId);
-        if (!platform) throw new ErrorWithStatus(`Platform with id ${platformId} does not exist`, 400);
+    async deletePlatform(platform_id: number) {
+        const platform = this.findOne(platform_id);
+        if (!platform) throw new ErrorWithStatus(`Platform with id ${platform_id} does not exist`, 400);
 
-        return this.softDelete(platformId);
+        return this.softDelete(platform_id);
     }
 
-    async updatePlatform(platformId: number, platformDTO: Partial<PlatformDTO>) {
-        const platform = this.findOne(platformId);
-        if (!platform) throw new ErrorWithStatus(`Platform with id ${platformId} does not exist`, 400);
-        await this.update(platformId, platformDTO);
+    async updatePlatform(platform_id: number, platformDTO: Partial<PlatformDTO>) {
+        const platform = this.findOne(platform_id);
+        if (!platform) throw new ErrorWithStatus(`Platform with id ${platform_id} does not exist`, 400);
+        await this.update(platform_id, platformDTO);
 
-        const updatedPlatform = this.findOne(platformId);
+        const updatedPlatform = this.findOne(platform_id);
         return instanceToInstance(updatedPlatform);
     }
 }

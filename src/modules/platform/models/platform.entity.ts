@@ -18,7 +18,7 @@ export class PlatformEntity extends BaseEntity {
         scale: 2,
         transformer: new DecimalTransformer()
     })
-        initialAmount: number;
+        initial_amount: number;
 
     @Column({
         type: 'decimal',
@@ -26,7 +26,7 @@ export class PlatformEntity extends BaseEntity {
         scale: 2,
         transformer: new DecimalTransformer()
     })
-        currentAmount: number;
+        current_amount: number;
 
     @OneToMany(() => DepositEntity, deposit => deposit.platform)
         deposits: DepositEntity[];

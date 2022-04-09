@@ -32,13 +32,13 @@ export const getTimeframes = async (_req: Request, res: Response, next: NextFunc
 
 /* TODO: Add find filters */
 export const deleteTimeframe = async (req: Request, res: Response, next: NextFunction) => {
-    const { id: timeframeId } = req.params;
-    const idAsNumber = Number(timeframeId);
-    if (!idAsNumber) throw new ErrorWithStatus('Timeframe id is not a valid number', 400);
+    const { id: timeframe_id } = req.params;
+    const id_as_number = Number(timeframe_id);
+    if (!id_as_number) throw new ErrorWithStatus('Timeframe id is not a valid number', 400);
 
     const timeframeService = container.resolve(TimeframeService);
     try {
-        const response = await timeframeService.deleteTimeframe(idAsNumber);
+        const response = await timeframeService.deleteTimeframe(id_as_number);
         res.send(response);
     } catch(ex: unknown) {
         next(ex);
@@ -47,14 +47,14 @@ export const deleteTimeframe = async (req: Request, res: Response, next: NextFun
 
 /* TODO: Add find filters */
 export const updateTimeframe = async (req: Request, res: Response, next: NextFunction) => {
-    const { id: timeframeId } = req.params;
-    const idAsNumber = Number(timeframeId);
-    if (!idAsNumber) throw new ErrorWithStatus('Timeframe id is not a valid number', 400);
+    const { id: timeframe_id } = req.params;
+    const id_as_number = Number(timeframe_id);
+    if (!id_as_number) throw new ErrorWithStatus('Timeframe id is not a valid number', 400);
 
     const timeframeDTO: Partial<TimeframeDTO> = req.body;
     const timeframeService = container.resolve(TimeframeService);
     try {
-        const response = await timeframeService.udpateTimeframe(idAsNumber, timeframeDTO);
+        const response = await timeframeService.udpateTimeframe(id_as_number, timeframeDTO);
         res.send(response);
     } catch(ex: unknown) {
         next(ex);

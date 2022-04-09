@@ -34,26 +34,30 @@ export class TimeframeService {
         return timeframes;
     }
 
-    async udpateTimeframe(timeframeId: number, timeframeDTO: Partial<TimeframeDTO>) {
+    async udpateTimeframe(timeframe_id: number, timeframeDTO: Partial<TimeframeDTO>) {
         const { name } = timeframeDTO;
         if (name)
             timeframeDTO.name = name.toUpperCase();
 
-        return await this.timeframeRepository.updateTimeframe(timeframeId, timeframeDTO);
+        return await this.timeframeRepository.updateTimeframe(timeframe_id, timeframeDTO);
     }
 
-    async deleteTimeframe(timeframeId: number) {
-        return await this.timeframeRepository.deleteTimeframe(timeframeId);
+    async deleteTimeframe(timeframe_id: number) {
+        return await this.timeframeRepository.deleteTimeframe(timeframe_id);
     }
 
-    private async failIfTimeframeNameIsNotAvailable(timeframeName: string) {
+    async getTimeframeOrFail(timeframe_id: number) {
+        return await this.timeframeRepository.findOneOrFail(timeframe_id);
+    }
+
+    private async failIfTimeframeNameIsNotAvailable(timeframe_name: string) {
         const timeframe = await this.timeframeRepository.findOne({
             where: {
-                name: timeframeName.toUpperCase()
+                name: timeframe_name.toUpperCase()
             }
         });
 
-        if (timeframe) throw new ErrorWithStatus(`There's already an timeframe named ${timeframeName}`, 400);
+        if (timeframe) throw new ErrorWithStatus(`There's already an timeframe named ${timeframe_name}`, 400);
     }
 
 }

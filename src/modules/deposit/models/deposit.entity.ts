@@ -10,20 +10,10 @@ import { BaseEntity } from '@modules/base/base.entity';
 import { PlatformEntity } from '@modules/platform';
 
 // Utils
-import { DecimalTransformer } from '@utils/transformers';
+import { DecimalTransformer, DateTransformer } from '@utils/transformers';
 
 @Entity('deposit')
 export class DepositEntity extends BaseEntity {
-    constructor(amount: number, platform: PlatformEntity, date?: Date) {
-        super();
-        this.amount = amount;
-        this.platform = platform;
-        if (date)
-            this.date = date;
-        else
-            this.date = new Date();
-    }
-
     @Column({
         type: 'numeric',
         precision: 10,
@@ -32,7 +22,10 @@ export class DepositEntity extends BaseEntity {
     })
         amount: number;
 
-    @Column({ nullable: true })
+    @Column({
+        nullable: true,
+        transformer: new DateTransformer()
+    })
         date: Date;
 
     @JoinColumn({ name: 'platform_id' })

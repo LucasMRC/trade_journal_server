@@ -32,13 +32,13 @@ export const getDeposits = async (_req: Request, res: Response, next: NextFuncti
 
 /* TODO: Add find filters */
 export const deleteDeposit = async (req: Request, res: Response, next: NextFunction) => {
-    const { id: depositId } = req.params;
-    const idAsNumber = Number(depositId);
-    if (!idAsNumber) throw new ErrorWithStatus('Deposit id is not a valid number', 400);
+    const { id: deposit_id } = req.params;
+    const id_as_number = Number(deposit_id);
+    if (!id_as_number) throw new ErrorWithStatus('Deposit id is not a valid number', 400);
 
     const depositService = container.resolve(DepositService);
     try {
-        const response = await depositService.deleteDeposit(idAsNumber);
+        const response = await depositService.deleteDeposit(id_as_number);
         res.send(response);
     } catch(ex: unknown) {
         next(ex);
@@ -47,14 +47,14 @@ export const deleteDeposit = async (req: Request, res: Response, next: NextFunct
 
 /* TODO: Add find filters */
 export const updateDeposit = async (req: Request, res: Response, next: NextFunction) => {
-    const { id: depositId } = req.params;
-    const idAsNumber = Number(depositId);
-    if (!idAsNumber) throw new ErrorWithStatus('Deposit id is not a valid number', 400);
+    const { id: deposit_id } = req.params;
+    const id_as_number = Number(deposit_id);
+    if (!id_as_number) throw new ErrorWithStatus('Deposit id is not a valid number', 400);
 
     const depositDTO: Partial<DepositDTO> = req.body;
     const depositService = container.resolve(DepositService);
     try {
-        const response = await depositService.udpateDeposit(idAsNumber, depositDTO);
+        const response = await depositService.udpateDeposit(id_as_number, depositDTO);
         res.send(response);
     } catch(ex: unknown) {
         next(ex);

@@ -20,9 +20,9 @@ export class DepositService {
     }
 
     async createNewDeposit(depositDTO: DepositDTO) {
-        const platform = await this.platformService.findPlatformFromDTOOrFail(depositDTO);
+        const platform = await this.platformService.getPlatformOrFail(depositDTO.platform_id);
         /* Update current amount in the platform */
-        platform.currentAmount += depositDTO.amount;
+        platform.current_amount += depositDTO.amount;
         await this.platformService.updatePlatform(platform.id, platform);
 
         const deposit = await this.depositRepository.createNew(depositDTO, platform);
@@ -34,12 +34,12 @@ export class DepositService {
         return deposits;
     }
 
-    async udpateDeposit(depositId: number, depositDTO: Partial<DepositDTO>) {
-        return await this.depositRepository.updateDeposit(depositId, depositDTO);
+    async udpateDeposit(deposit_id: number, depositDTO: Partial<DepositDTO>) {
+        return await this.depositRepository.updateDeposit(deposit_id, depositDTO);
     }
 
-    async deleteDeposit(depositId: number) {
-        return await this.depositRepository.deleteDeposit(depositId);
+    async deleteDeposit(deposit_id: number) {
+        return await this.depositRepository.deleteDeposit(deposit_id);
     }
 
 }

@@ -12,13 +12,13 @@ export abstract class BaseEntity {
 
     @Exclude()
     @CreateDateColumn()
-        createdDate?: Date;
+        created_date?: Date;
 
     @Exclude()
     @UpdateDateColumn()
-        lastUpdated?: Date;
+        last_updated?: Date;
 
     @Exclude()
     @DeleteDateColumn()
-        deletedAt?: Date;
+        deleted_at?: Date;
 }

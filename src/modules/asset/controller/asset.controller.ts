@@ -33,13 +33,13 @@ export const getAssets = async (_req: Request, res: Response, next: NextFunction
 
 /* TODO: Add find filters */
 export const deleteAsset = async (req: Request, res: Response, next: NextFunction) => {
-    const { id: assetId } = req.params;
-    const idAsNumber = Number(assetId);
-    if (!idAsNumber) throw new ErrorWithStatus('Asset id is not a valid number', 400);
+    const { id: asset_id } = req.params;
+    const id_as_number = Number(asset_id);
+    if (!id_as_number) throw new ErrorWithStatus('Asset id is not a valid number', 400);
 
     const assetService = container.resolve(AssetService);
     try {
-        const response = await assetService.deleteAsset(idAsNumber);
+        const response = await assetService.deleteAsset(id_as_number);
         res.send(response);
     } catch(ex: unknown) {
         next(ex);
@@ -48,14 +48,14 @@ export const deleteAsset = async (req: Request, res: Response, next: NextFunctio
 
 /* TODO: Add find filters */
 export const updateAsset = async (req: Request, res: Response, next: NextFunction) => {
-    const { id: assetId } = req.params;
-    const idAsNumber = Number(assetId);
-    if (!idAsNumber) throw new ErrorWithStatus('Asset id is not a valid number', 400);
+    const { id: asset_id } = req.params;
+    const id_as_number = Number(asset_id);
+    if (!id_as_number) throw new ErrorWithStatus('Asset id is not a valid number', 400);
 
     const assetDTO: Partial<AssetDTO> = req.body;
     const assetService = container.resolve(AssetService);
     try {
-        const response = await assetService.udpateAsset(idAsNumber, assetDTO);
+        const response = await assetService.udpateAsset(id_as_number, assetDTO);
         res.send(response);
     } catch(ex: unknown) {
         next(ex);

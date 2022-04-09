@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { instanceToInstance } from 'class-transformer';
+import { instanceToInstance, plainToInstance } from 'class-transformer';
 import { injectable } from 'tsyringe';
 
 // Modules
@@ -12,9 +12,10 @@ import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 @injectable()
 @EntityRepository(AssetEntity)
 export class AssetRepository extends Repository<AssetEntity> {
+
     async createNew(assetDTO: AssetDTO) {
-        const newAsset: AssetEntity = await this.save(assetDTO);
-        return instanceToInstance(newAsset);
+        const new_asset: AssetEntity = await this.save(assetDTO);
+        return plainToInstance(AssetEntity, new_asset);
     }
 
     async fetchAssets() {
@@ -22,18 +23,17 @@ export class AssetRepository extends Repository<AssetEntity> {
         return instanceToInstance(assets);
     }
 
-    async deleteAsset(assetId: number) {
-        const asset = this.findOne(assetId);
-        if (!asset) throw new ErrorWithStatus(`Asset with id ${assetId} does not exist`, 400);
+    async deleteAsset(asset_id: number) {
+        const asset = this.findOne(asset_id);
+        if (!asset) throw new ErrorWithStatus(`Asset with id ${asset_id} does not exist`, 400);
 
-        return this.softDelete(assetId);
+        return this.softDelete(asset_id);
     }
 
-    async updateAsset(assetId: number, assetDTO: Partial<AssetDTO>) {
-        const asset = this.findOne(assetId);
-        if (!asset) throw new ErrorWithStatus(`Asset with id ${assetId} does not exist`, 400);
+    async updateAsset(asset_id: number, assetDTO: Partial<AssetDTO>) {
+        const asset = this.findOne(asset_id);
+        if (!asset) throw new ErrorWithStatus(`Asset with id ${asset_id} does not exist`, 400);
 
-        return this.update(assetId, assetDTO);
+        return this.update(asset_id, assetDTO);
     }
-
 }

@@ -34,26 +34,30 @@ export class AssetService {
         return assets;
     }
 
-    async udpateAsset(assetId: number, assetDTO: Partial<AssetDTO>) {
+    async udpateAsset(asset_id: number, assetDTO: Partial<AssetDTO>) {
         const { name } = assetDTO;
         if (name)
             assetDTO.name = name.toUpperCase();
 
-        return await this.assetRepository.updateAsset(assetId, assetDTO);
+        return await this.assetRepository.updateAsset(asset_id, assetDTO);
     }
 
-    async deleteAsset(assetId: number) {
-        return await this.assetRepository.deleteAsset(assetId);
+    async deleteAsset(asset_id: number) {
+        return await this.assetRepository.deleteAsset(asset_id);
     }
 
-    private async failIfAssetNameIsNotAvailable(assetName: string) {
+    async getAssetOrFail(asset_id: number) {
+        return await this.assetRepository.findOneOrFail(asset_id);
+    }
+
+    private async failIfAssetNameIsNotAvailable(asset_name: string) {
         const asset = await this.assetRepository.findOne({
             where: {
-                name: assetName.toUpperCase()
+                name: asset_name.toUpperCase()
             }
         });
 
-        if (asset) throw new ErrorWithStatus(`There's already an asset named ${assetName}`, 400);
+        if (asset) throw new ErrorWithStatus(`There's already an asset named ${asset_name}`, 400);
     }
 
 }

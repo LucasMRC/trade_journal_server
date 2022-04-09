@@ -32,13 +32,13 @@ export const getOutcomes = async (_req: Request, res: Response, next: NextFuncti
 
 /* TODO: Add find filters */
 export const deleteOutcome = async (req: Request, res: Response, next: NextFunction) => {
-    const { id: outcomeId } = req.params;
-    const idAsNumber = Number(outcomeId);
-    if (!idAsNumber) throw new ErrorWithStatus('Outcome id is not a valid number', 400);
+    const { id: outcome_id } = req.params;
+    const id_as_number = Number(outcome_id);
+    if (!id_as_number) throw new ErrorWithStatus('Outcome id is not a valid number', 400);
 
     const outcomeService = container.resolve(OutcomeService);
     try {
-        const response = await outcomeService.deleteOutcome(idAsNumber);
+        const response = await outcomeService.deleteOutcome(id_as_number);
         res.send(response);
     } catch(ex: unknown) {
         next(ex);
@@ -47,14 +47,14 @@ export const deleteOutcome = async (req: Request, res: Response, next: NextFunct
 
 /* TODO: Add find filters */
 export const updateOutcome = async (req: Request, res: Response, next: NextFunction) => {
-    const { id: outcomeId } = req.params;
-    const idAsNumber = Number(outcomeId);
-    if (!idAsNumber) throw new ErrorWithStatus('Outcome id is not a valid number', 400);
+    const { id: outcome_id } = req.params;
+    const id_as_number = Number(outcome_id);
+    if (!id_as_number) throw new ErrorWithStatus('Outcome id is not a valid number', 400);
 
     const outcomeDTO: Partial<OutcomeDTO> = req.body;
     const outcomeService = container.resolve(OutcomeService);
     try {
-        const response = await outcomeService.udpateOutcome(idAsNumber, outcomeDTO);
+        const response = await outcomeService.udpateOutcome(id_as_number, outcomeDTO);
         res.send(response);
     } catch(ex: unknown) {
         next(ex);

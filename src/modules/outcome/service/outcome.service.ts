@@ -34,26 +34,30 @@ export class OutcomeService {
         return outcomes;
     }
 
-    async udpateOutcome(outcomeId: number, outcomeDTO: Partial<OutcomeDTO>) {
+    async udpateOutcome(outcome_id: number, outcomeDTO: Partial<OutcomeDTO>) {
         const { name } = outcomeDTO;
         if (name)
             outcomeDTO.name = name.toUpperCase();
 
-        return await this.outcomeRepository.updateOutcome(outcomeId, outcomeDTO);
+        return await this.outcomeRepository.updateOutcome(outcome_id, outcomeDTO);
     }
 
-    async deleteOutcome(outcomeId: number) {
-        return await this.outcomeRepository.deleteOutcome(outcomeId);
+    async deleteOutcome(outcome_id: number) {
+        return await this.outcomeRepository.deleteOutcome(outcome_id);
     }
 
-    private async failIfOutcomeNameIsNotAvailable(outcomeName: string) {
+    async getOutcomeOrFail(outcome_id: number) {
+        return await this.outcomeRepository.findOneOrFail(outcome_id);
+    }
+
+    private async failIfOutcomeNameIsNotAvailable(outcome_name: string) {
         const outcome = await this.outcomeRepository.findOne({
             where: {
-                name: outcomeName.toUpperCase()
+                name: outcome_name.toUpperCase()
             }
         });
 
-        if (outcome) throw new ErrorWithStatus(`There's already an outcome named ${outcomeName}`, 400);
+        if (outcome) throw new ErrorWithStatus(`There's already an outcome named ${outcome_name}`, 400);
     }
 
 }

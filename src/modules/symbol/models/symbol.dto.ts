@@ -1,5 +1,4 @@
 export class SymbolDTO {
     name: string;
-
-    assetId: number;
+    asset_id: number;
 }

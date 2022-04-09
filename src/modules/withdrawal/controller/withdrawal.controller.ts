@@ -32,13 +32,13 @@ export const getWithdrawals = async (_req: Request, res: Response, next: NextFun
 
 /* TODO: Add find filters */
 export const deleteWithdrawal = async (req: Request, res: Response, next: NextFunction) => {
-    const { id: withdrawalId } = req.params;
-    const idAsNumber = Number(withdrawalId);
-    if (!idAsNumber) throw new ErrorWithStatus('Withdrawal id is not a valid number', 400);
+    const { id: withdrawal_id } = req.params;
+    const id_as_number = Number(withdrawal_id);
+    if (!id_as_number) throw new ErrorWithStatus('Withdrawal id is not a valid number', 400);
 
     const withdrawalService = container.resolve(WithdrawalService);
     try {
-        const response = await withdrawalService.deleteWithdrawal(idAsNumber);
+        const response = await withdrawalService.deleteWithdrawal(id_as_number);
         res.send(response);
     } catch(ex: unknown) {
         next(ex);
@@ -47,14 +47,14 @@ export const deleteWithdrawal = async (req: Request, res: Response, next: NextFu
 
 /* TODO: Add find filters */
 export const updateWithdrawal = async (req: Request, res: Response, next: NextFunction) => {
-    const { id: withdrawalId } = req.params;
-    const idAsNumber = Number(withdrawalId);
-    if (!idAsNumber) throw new ErrorWithStatus('Withdrawal id is not a valid number', 400);
+    const { id: withdrawal_id } = req.params;
+    const id_as_number = Number(withdrawal_id);
+    if (!id_as_number) throw new ErrorWithStatus('Withdrawal id is not a valid number', 400);
 
     const withdrawalDTO: Partial<WithdrawalDTO> = req.body;
     const withdrawalService = container.resolve(WithdrawalService);
     try {
-        const response = await withdrawalService.udpateWithdrawal(idAsNumber, withdrawalDTO);
+        const response = await withdrawalService.udpateWithdrawal(id_as_number, withdrawalDTO);
         res.send(response);
     } catch(ex: unknown) {
         next(ex);

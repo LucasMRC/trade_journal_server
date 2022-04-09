@@ -6,26 +6,22 @@ import {
 } from 'typeorm';
 import { BaseEntity } from '@modules/base/base.entity';
 import { PlatformEntity } from '@modules/platform';
+import { DateTransformer, DecimalTransformer } from '@utils/transformers';
 
 @Entity('withdrawal')
 export class WithdrawalEntity extends BaseEntity {
-    constructor(amount: number, platform: PlatformEntity, date?: Date) {
-        super();
-        this.amount = amount;
-        this.platform = platform;
-        if (date)
-            this.date = date;
-        else this.date = new Date();
-    }
-
     @Column({
         type: 'decimal',
         precision: 10,
-        scale: 2
+        scale: 2,
+        transformer: new DecimalTransformer()
     })
         amount: number;
 
-    @Column({ nullable: true })
+    @Column({
+        nullable: true,
+        transformer: new DateTransformer()
+    })
         date: Date;
 
     @JoinColumn({ name: 'platform_id' })

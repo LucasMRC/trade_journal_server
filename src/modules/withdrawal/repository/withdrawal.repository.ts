@@ -12,11 +12,17 @@ import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 @injectable()
 @EntityRepository(WithdrawalEntity)
 export class WithdrawalRepository extends Repository<WithdrawalEntity> {
+
     async createNew(withdrawalDTO: WithdrawalDTO, platform: PlatformEntity) {
         const { amount, date } = withdrawalDTO;
-        const newWithdrawal: WithdrawalEntity = new WithdrawalEntity(amount, platform, date);
-        await this.save(newWithdrawal);
-        return instanceToInstance(newWithdrawal);
+        const default_date_value = new Date().toISOString().split('T')[0];
+        const new_withdrawal: WithdrawalEntity = this.create({
+            amount,
+            platform,
+            date: date || default_date_value
+        });
+        await this.save(new_withdrawal);
+        return instanceToInstance(new_withdrawal);
     }
 
     async fetchWithdrawals() {
@@ -24,18 +30,18 @@ export class WithdrawalRepository extends Repository<WithdrawalEntity> {
         return instanceToInstance(withdrawals);
     }
 
-    async deleteWithdrawal(withdrawalId: number) {
-        const withdrawal = this.findOne(withdrawalId);
-        if (!withdrawal) throw new ErrorWithStatus(`Withdrawal with id ${withdrawalId} does not exist`, 400);
+    async deleteWithdrawal(withdrawal_id: number) {
+        const withdrawal = this.findOne(withdrawal_id);
+        if (!withdrawal) throw new ErrorWithStatus(`Withdrawal with id ${withdrawal_id} does not exist`, 400);
 
-        return this.softDelete(withdrawalId);
+        return this.softDelete(withdrawal_id);
     }
 
-    async updateWithdrawal(withdrawalId: number, withdrawalDTO: Partial<WithdrawalDTO>) {
-        const withdrawal = this.findOne(withdrawalId);
-        if (!withdrawal) throw new ErrorWithStatus(`Withdrawal with id ${withdrawalId} does not exist`, 400);
+    async updateWithdrawal(withdrawal_id: number, withdrawalDTO: Partial<WithdrawalDTO>) {
+        const withdrawal = this.findOne(withdrawal_id);
+        if (!withdrawal) throw new ErrorWithStatus(`Withdrawal with id ${withdrawal_id} does not exist`, 400);
 
-        return this.update(withdrawalId, withdrawalDTO);
+        return this.update(withdrawal_id, withdrawalDTO);
     }
 
 }

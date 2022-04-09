@@ -1,32 +1,46 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
-import { BaseEntity } from '../../base/base.entity';
-import { OutcomeEntity } from '../../outcome/models/outcome.entity';
-import { SymbolEntity } from '../../symbol/models/symbol.entity';
-import { PlatformEntity } from '../../platform/models/platform.entity';
-import { TimeframeEntity } from '../../timeframe/models/timeframe.entity';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne
+} from 'typeorm';
+
+// Modules
+import { BaseEntity } from '@modules/base/base.entity';
+import { OutcomeEntity } from '@modules/outcome';
+import { SymbolEntity } from '@modules/symbol';
+import { PlatformEntity } from '@modules/platform';
+import { TimeframeEntity } from '@modules/timeframe';
+import { DateTransformer, DecimalTransformer } from '@utils/transformers';
 
 @Entity('trade')
 export class TradeEntity extends BaseEntity {
-    @Column()
+    @Column({
+        nullable: true,
+        transformer: new DateTransformer()
+    })
         start_date: Date;
 
-    @Column()
+    @Column({
+        nullable: true,
+        transformer: new DateTransformer()
+    })
         end_date: Date;
 
-    @JoinColumn()
-    @OneToOne(() => SymbolEntity)
+    @JoinColumn({ name: 'symbol_id' })
+    @ManyToOne(() => SymbolEntity)
         symbol: SymbolEntity;
 
-    @JoinColumn()
-    @OneToOne(() => OutcomeEntity)
+    @JoinColumn({ name: 'outcome_id' })
+    @ManyToOne(() => OutcomeEntity)
         outcome: OutcomeEntity;
 
-    @JoinColumn()
-    @OneToOne(() => PlatformEntity)
+    @JoinColumn({ name: 'platform_id' })
+    @ManyToOne(() => PlatformEntity)
         platform: PlatformEntity;
 
-    @JoinColumn()
-    @OneToOne(() => TimeframeEntity)
+    @JoinColumn({ name: 'timeframe_id' })
+    @ManyToOne(() => TimeframeEntity)
         timeframe: TimeframeEntity;
 
     @Column({ type: 'longtext' })
@@ -65,7 +79,8 @@ export class TradeEntity extends BaseEntity {
     @Column({
         type: 'decimal',
         precision: 6,
-        scale: 2
+        scale: 2,
+        transformer: new DecimalTransformer()
     })
         lote: number;
 }

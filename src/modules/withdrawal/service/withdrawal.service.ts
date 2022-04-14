@@ -1,4 +1,4 @@
-import { injectable } from 'tsyringe';
+import { injectable, container } from 'tsyringe';
 import { getCustomRepository } from 'typeorm';
 
 // Modules
@@ -19,6 +19,7 @@ export class WithdrawalService {
 
     constructor() {
         this.withdrawalRepository = getCustomRepository(WithdrawalRepository);
+        this.platformService = container.resolve(PlatformService);
     }
 
     async createNewWithdrawal(withdrawalDTO: WithdrawalDTO) {
@@ -27,12 +28,11 @@ export class WithdrawalService {
         if (platform.current_amount < withdrawalDTO.amount)
             throw new ErrorWithStatus(`The platform ${platform.name} doesn't have enough funds to withdraw ${withdrawalDTO.amount}`, 400);
 
-        const withdrawal = await this.withdrawalRepository.createNew(withdrawalDTO, platform);
-
         /* Update current amount in the platform entity */
-        const current_amount = platform.current_amount - withdrawalDTO.amount;
-        await this.platformService.updatePlatform(platform.id, { current_amount });
+        platform.current_amount -= withdrawalDTO.amount;
+        await this.platformService.updatePlatform(platform.id, platform);
 
+        const withdrawal = await this.withdrawalRepository.createNew(withdrawalDTO, platform);
         return withdrawal;
     }
 

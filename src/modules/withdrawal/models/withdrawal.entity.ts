@@ -2,16 +2,16 @@ import {
     Column,
     Entity,
     JoinColumn,
-    OneToOne
+    ManyToOne
 } from 'typeorm';
-import { BaseEntity } from '@modules/base/base.entity';
+import { BaseEntity } from '@modules/base';
 import { PlatformEntity } from '@modules/platform';
 import { DateTransformer, DecimalTransformer } from '@utils/transformers';
 
 @Entity('withdrawal')
 export class WithdrawalEntity extends BaseEntity {
     @Column({
-        type: 'decimal',
+        type: 'numeric',
         precision: 10,
         scale: 2,
         transformer: new DecimalTransformer()
@@ -25,6 +25,6 @@ export class WithdrawalEntity extends BaseEntity {
         date: Date;
 
     @JoinColumn({ name: 'platform_id' })
-    @OneToOne(() => PlatformEntity)
+    @ManyToOne(() => PlatformEntity, platform => platform.withdrawals)
         platform: PlatformEntity;
 }

@@ -1,8 +1,9 @@
 import { Entity, Column, OneToMany } from 'typeorm';
 
 // Modules
-import { BaseEntity } from '@modules/base/base.entity';
-import { DepositEntity } from '@modules/deposit/models/deposit.entity';
+import { BaseEntity } from '@modules/base';
+import { DepositEntity } from '@modules/deposit';
+import { WithdrawalEntity } from '@modules/withdrawal';
 
 // Utils
 import { DecimalTransformer } from '@utils/transformers';
@@ -30,4 +31,7 @@ export class PlatformEntity extends BaseEntity {
 
     @OneToMany(() => DepositEntity, deposit => deposit.platform)
         deposits: DepositEntity[];
+
+    @OneToMany(() => WithdrawalEntity, withdrawal => withdrawal.platform)
+        withdrawals: WithdrawalEntity[];
 }

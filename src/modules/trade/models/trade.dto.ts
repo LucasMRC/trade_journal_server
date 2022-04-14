@@ -12,4 +12,5 @@ export class TradeDTO {
     lote: number;
     end_date?: string;
     outcome_id?: number;
+    currency_id?: number;
 }

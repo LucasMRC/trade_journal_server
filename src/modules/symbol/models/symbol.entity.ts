@@ -1,5 +1,12 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { BaseEntity } from '@modules/base/base.entity';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne
+} from 'typeorm';
+
+// Modules
+import { BaseEntity } from '@modules/base';
 import { AssetEntity } from '@modules/asset/models/asset.entity';
 
 @Entity('symbol')

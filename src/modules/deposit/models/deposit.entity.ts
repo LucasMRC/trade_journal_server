@@ -6,7 +6,7 @@ import {
 } from 'typeorm';
 
 // Modules
-import { BaseEntity } from '@modules/base/base.entity';
+import { BaseEntity } from '@modules/base';
 import { PlatformEntity } from '@modules/platform';
 
 // Utils

@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { instanceToInstance } from 'class-transformer';
+import { instanceToInstance, plainToInstance } from 'class-transformer';
 import { injectable } from 'tsyringe';
 
 // Modules
@@ -14,7 +14,7 @@ export class OutcomeRepository extends Repository<OutcomeEntity> {
 
     async createNew(outcomeDTO: OutcomeDTO) {
         const newOutcome: OutcomeEntity = await this.save(outcomeDTO);
-        return instanceToInstance(newOutcome);
+        return plainToInstance(OutcomeEntity, newOutcome);
     }
 
     async fetchOutcomes() {

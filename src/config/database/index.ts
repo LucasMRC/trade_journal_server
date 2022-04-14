@@ -2,14 +2,15 @@ import { ConnectionOptions } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 // Modules
-import { PlatformEntity } from '@modules/platform/';
+import { PlatformEntity } from '@modules/platform';
 import { TimeframeEntity } from '@modules/timeframe';
-import { TradeEntity } from '@modules/trade/models/trade.entity';
+import { TradeEntity } from '@modules/trade';
 import { SymbolEntity } from '@modules/symbol';
 import { AssetEntity } from '@modules/asset';
 import { OutcomeEntity } from '@modules/outcome';
 import { WithdrawalEntity } from '@modules/withdrawal';
 import { DepositEntity } from '@modules/deposit';
+import { CurrencyEntity } from '@modules/currency';
 import { BlowUpEntity } from '@modules/blow_up/models/blow_up.entity';
 import { UserEntity } from '@modules/user/models/user.entity';
 
@@ -23,6 +24,7 @@ export const connectionConfig: ConnectionOptions = {
     entities: [
         PlatformEntity,
         TimeframeEntity,
+        CurrencyEntity,
         TradeEntity,
         SymbolEntity,
         AssetEntity,

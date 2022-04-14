@@ -6,11 +6,14 @@ import {
 } from 'typeorm';
 
 // Modules
-import { BaseEntity } from '@modules/base/base.entity';
+import { BaseEntity } from '@modules/base';
 import { OutcomeEntity } from '@modules/outcome';
 import { SymbolEntity } from '@modules/symbol';
 import { PlatformEntity } from '@modules/platform';
 import { TimeframeEntity } from '@modules/timeframe';
+import { CurrencyEntity } from '@modules/currency';
+
+// Utils
 import { DateTransformer, DecimalTransformer } from '@utils/transformers';
 
 @Entity('trade')
@@ -30,6 +33,10 @@ export class TradeEntity extends BaseEntity {
     @JoinColumn({ name: 'symbol_id' })
     @ManyToOne(() => SymbolEntity)
         symbol: SymbolEntity;
+
+    @JoinColumn({ name: 'currency_id' })
+    @ManyToOne(() => CurrencyEntity)
+        currency: CurrencyEntity;
 
     @JoinColumn({ name: 'outcome_id' })
     @ManyToOne(() => OutcomeEntity)

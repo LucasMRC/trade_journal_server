@@ -47,7 +47,11 @@ export class OutcomeService {
     }
 
     async getOutcomeOrFail(outcome_id: number) {
-        return await this.outcomeRepository.findOneOrFail(outcome_id);
+        try {
+            return await this.outcomeRepository.findOneOrFail(outcome_id);
+        } catch (error) {
+            throw new ErrorWithStatus(`Outcome with id ${outcome_id} not found`, 404);
+        }
     }
 
     private async failIfOutcomeNameIsNotAvailable(outcome_name: string) {

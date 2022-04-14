@@ -47,7 +47,11 @@ export class AssetService {
     }
 
     async getAssetOrFail(asset_id: number) {
-        return await this.assetRepository.findOneOrFail(asset_id);
+        try {
+            return await this.assetRepository.findOneOrFail(asset_id);
+        } catch (ex: unknown) {
+            throw new ErrorWithStatus(`There's no asset with id ${asset_id}`, 400);
+        }
     }
 
     private async failIfAssetNameIsNotAvailable(asset_name: string) {

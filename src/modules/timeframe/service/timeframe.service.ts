@@ -47,7 +47,11 @@ export class TimeframeService {
     }
 
     async getTimeframeOrFail(timeframe_id: number) {
-        return await this.timeframeRepository.findOneOrFail(timeframe_id);
+        try {
+            return await this.timeframeRepository.findOneOrFail(timeframe_id);
+        } catch (error) {
+            throw new ErrorWithStatus(`Timeframe with id ${timeframe_id} not found`, 404);
+        }
     }
 
     private async failIfTimeframeNameIsNotAvailable(timeframe_name: string) {

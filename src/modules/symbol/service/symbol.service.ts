@@ -47,7 +47,11 @@ export class SymbolService {
     }
 
     async getSymbolOrFail(symbol_id: number) {
-        return await this.symbolRepository.findOneOrFail(symbol_id);
+        try {
+            return await this.symbolRepository.findOneOrFail(symbol_id);
+        } catch (ex: unknown) {
+            throw new ErrorWithStatus(`Symbol with id ${symbol_id} not found`, 404);
+        }
     }
 
     private async failIfSymbolNameIsNotAvailableOrReturnAsset(symbolDTO: SymbolDTO) {

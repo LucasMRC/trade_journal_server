@@ -39,7 +39,11 @@ export class PlatformService {
     }
 
     async getPlatformOrFail(platform_id: number) {
-        return await this.platformRepository.findOneOrFail(platform_id);
+        try {
+            return await this.platformRepository.findOneOrFail(platform_id);
+        } catch (ex: unknown) {
+            throw new ErrorWithStatus(`There's no platform with id ${platform_id}`, 400);
+        }
     }
 
     private async failIfPlatformNameIsNotAvailable(platform_name: string) {

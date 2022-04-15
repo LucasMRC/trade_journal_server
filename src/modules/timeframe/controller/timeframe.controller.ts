@@ -34,7 +34,7 @@ export const getTimeframes = async (_req: Request, res: Response, next: NextFunc
 export const deleteTimeframe = async (req: Request, res: Response, next: NextFunction) => {
     const { id: timeframe_id } = req.params;
     const id_as_number = Number(timeframe_id);
-    if (!id_as_number) throw new ErrorWithStatus('Timeframe id is not a valid number', 400);
+    if (!id_as_number) throw new ErrorWithStatus(400, 'Timeframe id is not a valid number');
 
     const timeframeService = container.resolve(TimeframeService);
     try {
@@ -49,7 +49,7 @@ export const deleteTimeframe = async (req: Request, res: Response, next: NextFun
 export const updateTimeframe = async (req: Request, res: Response, next: NextFunction) => {
     const { id: timeframe_id } = req.params;
     const id_as_number = Number(timeframe_id);
-    if (!id_as_number) throw new ErrorWithStatus('Timeframe id is not a valid number', 400);
+    if (!id_as_number) throw new ErrorWithStatus(400, 'Timeframe id is not a valid number');
 
     const timeframeDTO: Partial<TimeframeDTO> = req.body;
     const timeframeService = container.resolve(TimeframeService);

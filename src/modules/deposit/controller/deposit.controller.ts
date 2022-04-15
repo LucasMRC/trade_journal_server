@@ -34,7 +34,7 @@ export const getDeposits = async (_req: Request, res: Response, next: NextFuncti
 export const deleteDeposit = async (req: Request, res: Response, next: NextFunction) => {
     const { id: deposit_id } = req.params;
     const id_as_number = Number(deposit_id);
-    if (!id_as_number) throw new ErrorWithStatus('Deposit id is not a valid number', 400);
+    if (!id_as_number) throw new ErrorWithStatus(400, 'Deposit id is not a valid number');
 
     const depositService = container.resolve(DepositService);
     try {
@@ -49,7 +49,7 @@ export const deleteDeposit = async (req: Request, res: Response, next: NextFunct
 export const updateDeposit = async (req: Request, res: Response, next: NextFunction) => {
     const { id: deposit_id } = req.params;
     const id_as_number = Number(deposit_id);
-    if (!id_as_number) throw new ErrorWithStatus('Deposit id is not a valid number', 400);
+    if (!id_as_number) throw new ErrorWithStatus(400, 'Deposit id is not a valid number');
 
     const depositDTO: Partial<DepositDTO> = req.body;
     const depositService = container.resolve(DepositService);

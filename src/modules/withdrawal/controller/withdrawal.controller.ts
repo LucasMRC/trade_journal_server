@@ -34,7 +34,7 @@ export const getWithdrawals = async (_req: Request, res: Response, next: NextFun
 export const deleteWithdrawal = async (req: Request, res: Response, next: NextFunction) => {
     const { id: withdrawal_id } = req.params;
     const id_as_number = Number(withdrawal_id);
-    if (!id_as_number) throw new ErrorWithStatus('Withdrawal id is not a valid number', 400);
+    if (!id_as_number) throw new ErrorWithStatus(400, 'Withdrawal id is not a valid number');
 
     const withdrawalService = container.resolve(WithdrawalService);
     try {
@@ -49,7 +49,7 @@ export const deleteWithdrawal = async (req: Request, res: Response, next: NextFu
 export const updateWithdrawal = async (req: Request, res: Response, next: NextFunction) => {
     const { id: withdrawal_id } = req.params;
     const id_as_number = Number(withdrawal_id);
-    if (!id_as_number) throw new ErrorWithStatus('Withdrawal id is not a valid number', 400);
+    if (!id_as_number) throw new ErrorWithStatus(400, 'Withdrawal id is not a valid number');
 
     const withdrawalDTO: Partial<WithdrawalDTO> = req.body;
     const withdrawalService = container.resolve(WithdrawalService);

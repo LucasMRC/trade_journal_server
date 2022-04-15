@@ -25,7 +25,7 @@ export const getAllPlatforms = async (_req: Request, res: Response) => {
 export const deletePlatform = async (req: Request, res: Response, next: NextFunction) => {
     const { id: platform_id } = req.params;
     const id_as_number = Number(platform_id);
-    if (!id_as_number) throw new ErrorWithStatus('Platform id is not a valid number', 400);
+    if (!id_as_number) throw new ErrorWithStatus(400, 'Platform id is not a valid number');
 
     const platformService = container.resolve(PlatformService);
     try {
@@ -41,7 +41,7 @@ export const updatePlatform = async (req: Request, res: Response, next: NextFunc
     const platformDto: Partial<PlatformDTO> = req.body;
 
     const id_as_number = Number(platform_id);
-    if (!id_as_number) throw new ErrorWithStatus('Platform id is not a valid number', 400);
+    if (!id_as_number) throw new ErrorWithStatus(400, 'Platform id is not a valid number');
 
     const platformService = container.resolve(PlatformService);
     try {

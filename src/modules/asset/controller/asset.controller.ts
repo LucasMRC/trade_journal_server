@@ -35,7 +35,7 @@ export const getAssets = async (_req: Request, res: Response, next: NextFunction
 export const deleteAsset = async (req: Request, res: Response, next: NextFunction) => {
     const { id: asset_id } = req.params;
     const id_as_number = Number(asset_id);
-    if (!id_as_number) throw new ErrorWithStatus('Asset id is not a valid number', 400);
+    if (!id_as_number) throw new ErrorWithStatus(400, 'Asset id is not a valid number');
 
     const assetService = container.resolve(AssetService);
     try {
@@ -50,7 +50,7 @@ export const deleteAsset = async (req: Request, res: Response, next: NextFunctio
 export const updateAsset = async (req: Request, res: Response, next: NextFunction) => {
     const { id: asset_id } = req.params;
     const id_as_number = Number(asset_id);
-    if (!id_as_number) throw new ErrorWithStatus('Asset id is not a valid number', 400);
+    if (!id_as_number) throw new ErrorWithStatus(400, 'Asset id is not a valid number');
 
     const assetDTO: Partial<AssetDTO> = req.body;
     const assetService = container.resolve(AssetService);

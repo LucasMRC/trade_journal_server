@@ -34,7 +34,7 @@ export const getOutcomes = async (_req: Request, res: Response, next: NextFuncti
 export const deleteOutcome = async (req: Request, res: Response, next: NextFunction) => {
     const { id: outcome_id } = req.params;
     const id_as_number = Number(outcome_id);
-    if (!id_as_number) throw new ErrorWithStatus('Outcome id is not a valid number', 400);
+    if (!id_as_number) throw new ErrorWithStatus(300, 'Outcome id is not a valid number');
 
     const outcomeService = container.resolve(OutcomeService);
     try {
@@ -49,7 +49,7 @@ export const deleteOutcome = async (req: Request, res: Response, next: NextFunct
 export const updateOutcome = async (req: Request, res: Response, next: NextFunction) => {
     const { id: outcome_id } = req.params;
     const id_as_number = Number(outcome_id);
-    if (!id_as_number) throw new ErrorWithStatus('Outcome id is not a valid number', 400);
+    if (!id_as_number) throw new ErrorWithStatus(300, 'Outcome id is not a valid number');
 
     const outcomeDTO: Partial<OutcomeDTO> = req.body;
     const outcomeService = container.resolve(OutcomeService);

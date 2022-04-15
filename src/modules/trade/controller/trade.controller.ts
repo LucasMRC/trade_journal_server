@@ -34,7 +34,7 @@ export const getTrades = async (_req: Request, res: Response, next: NextFunction
 export const deleteTrade = async (req: Request, res: Response, next: NextFunction) => {
     const { id: trade_id } = req.params;
     const id_as_number = Number(trade_id);
-    if (!id_as_number) throw new ErrorWithStatus('Trade id is not a valid number', 400);
+    if (!id_as_number) throw new ErrorWithStatus(400, 'Trade id is not a valid number');
 
     const tradeService = container.resolve(TradeService);
     try {
@@ -49,7 +49,7 @@ export const deleteTrade = async (req: Request, res: Response, next: NextFunctio
 export const updateTrade = async (req: Request, res: Response, next: NextFunction) => {
     const { id: trade_id } = req.params;
     const id_as_number = Number(trade_id);
-    if (!id_as_number) throw new ErrorWithStatus('Trade id is not a valid number', 400);
+    if (!id_as_number) throw new ErrorWithStatus(400, 'Trade id is not a valid number');
 
     const tradeDTO: Partial<TradeDTO> = req.body;
     const tradeService = container.resolve(TradeService);

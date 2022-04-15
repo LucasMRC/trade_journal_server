@@ -34,7 +34,7 @@ export const getCurrencies = async (_req: Request, res: Response, next: NextFunc
 export const deleteCurrency = async (req: Request, res: Response, next: NextFunction) => {
     const { id: currency_id } = req.params;
     const id_as_number = Number(currency_id);
-    if (!id_as_number) throw new ErrorWithStatus('Currency id is not a valid number', 400);
+    if (!id_as_number) throw new ErrorWithStatus(400, 'Currency id is not a valid number');
 
     const currencyService = container.resolve(CurrencyService);
     try {
@@ -49,7 +49,7 @@ export const deleteCurrency = async (req: Request, res: Response, next: NextFunc
 export const updateCurrency = async (req: Request, res: Response, next: NextFunction) => {
     const { id: currency_id } = req.params;
     const id_as_number = Number(currency_id);
-    if (!id_as_number) throw new ErrorWithStatus('Currency id is not a valid number', 400);
+    if (!id_as_number) throw new ErrorWithStatus(400, 'Currency id is not a valid number');
 
     const currencyDTO: Partial<CurrencyDTO> = req.body;
     const currencyService = container.resolve(CurrencyService);

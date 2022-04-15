@@ -1,11 +1,19 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
-import { BaseEntity } from '../../base/base.entity';
-import { TradeEntity } from '../../trade/models/trade.entity';
-import { PlatformEntity } from '../../platform/models/platform.entity';
+import { Column, Entity, JoinColumn, OneToOne, ManyToOne } from 'typeorm';
+
+// Modules
+import { BaseEntity } from '@modules/base';
+import { TradeEntity } from '@modules/trade';
+import { PlatformEntity } from '@modules/platform';
+
+// Utils
+import { DateTransformer } from '@utils/transformers';
 
 @Entity('blow_up')
 export class BlowUpEntity extends BaseEntity {
-    @Column({ nullable: true })
+    @Column({
+        nullable: true,
+        transformer: new DateTransformer()
+    })
         date: Date;
 
     @JoinColumn()
@@ -13,6 +21,6 @@ export class BlowUpEntity extends BaseEntity {
         trade: TradeEntity;
 
     @JoinColumn()
-    @OneToOne(() => PlatformEntity)
+    @ManyToOne(() => PlatformEntity)
         platform: PlatformEntity;
 }

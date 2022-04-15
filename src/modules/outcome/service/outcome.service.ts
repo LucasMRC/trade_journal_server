@@ -4,19 +4,21 @@ import { getCustomRepository } from 'typeorm';
 // Modules
 import {
     OutcomeDTO,
+    OutcomeEntity,
     OutcomeRepository
 } from '@modules/outcome';
+import { BaseService } from '@modules/base';
 
 // Utils
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 
 @injectable()
-export class OutcomeService {
+export class OutcomeService extends BaseService<OutcomeEntity> {
 
     private outcomeRepository: OutcomeRepository;
 
     constructor() {
-        this.outcomeRepository = getCustomRepository(OutcomeRepository);
+        super(getCustomRepository(OutcomeRepository));
     }
 
     async createNewOutcome(outcomeDTO: OutcomeDTO) {
@@ -30,7 +32,7 @@ export class OutcomeService {
     }
 
     async getOutcomes() {
-        const outcomes = await this.outcomeRepository.fetchOutcomes();
+        const outcomes = await this.findAll();
         return outcomes;
     }
 
@@ -43,15 +45,7 @@ export class OutcomeService {
     }
 
     async deleteOutcome(outcome_id: number) {
-        return await this.outcomeRepository.deleteOutcome(outcome_id);
-    }
-
-    async getOutcomeOrFail(outcome_id: number) {
-        try {
-            return await this.outcomeRepository.findOneOrFail(outcome_id);
-        } catch (error) {
-            throw new ErrorWithStatus(`Outcome with id ${outcome_id} not found`, 404);
-        }
+        return await this.delete(outcome_id);
     }
 
     private async failIfOutcomeNameIsNotAvailable(outcome_name: string) {
@@ -61,7 +55,7 @@ export class OutcomeService {
             }
         });
 
-        if (outcome) throw new ErrorWithStatus(`There's already an outcome named ${outcome_name}`, 400);
+        if (outcome) throw new ErrorWithStatus(400, `There's already an outcome named ${outcome_name}`);
     }
 
 }

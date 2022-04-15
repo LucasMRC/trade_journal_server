@@ -1,10 +1,11 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository } from 'typeorm';
 import { instanceToInstance } from 'class-transformer';
 import { injectable } from 'tsyringe';
 
 // Modules
 import { WithdrawalEntity, WithdrawalDTO } from '@modules/withdrawal';
 import { PlatformEntity } from '@modules/platform';
+import { BaseRepository } from '@modules/base';
 
 // Utils
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
@@ -12,7 +13,7 @@ import { DateTransformer } from '@utils/transformers';
 
 @injectable()
 @EntityRepository(WithdrawalEntity)
-export class WithdrawalRepository extends Repository<WithdrawalEntity> {
+export class WithdrawalRepository extends BaseRepository<WithdrawalEntity> {
 
     async createNew(withdrawalDTO: WithdrawalDTO, platform: PlatformEntity) {
         const { amount, date } = withdrawalDTO;
@@ -26,21 +27,9 @@ export class WithdrawalRepository extends Repository<WithdrawalEntity> {
         return instanceToInstance(new_withdrawal);
     }
 
-    async fetchWithdrawals() {
-        const withdrawals = await this.find();
-        return instanceToInstance(withdrawals);
-    }
-
-    async deleteWithdrawal(withdrawal_id: number) {
-        const withdrawal = this.findOne(withdrawal_id);
-        if (!withdrawal) throw new ErrorWithStatus(`Withdrawal with id ${withdrawal_id} does not exist`, 400);
-
-        return this.softDelete(withdrawal_id);
-    }
-
     async updateWithdrawal(withdrawal_id: number, withdrawalDTO: Partial<WithdrawalDTO>) {
         const withdrawal = this.findOne(withdrawal_id);
-        if (!withdrawal) throw new ErrorWithStatus(`Withdrawal with id ${withdrawal_id} does not exist`, 400);
+        if (!withdrawal) throw new ErrorWithStatus(404, `Withdrawal with id ${withdrawal_id} does not exist`);
 
         return this.update(withdrawal_id, withdrawalDTO);
     }

@@ -3,20 +3,22 @@ import { getCustomRepository } from 'typeorm';
 
 // Modules
 import {
+    AssetEntity,
     AssetDTO,
     AssetRepository
 } from '@modules/asset';
+import { BaseService } from '@modules/base';
 
 // Utils
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 
 @injectable()
-export class AssetService {
+export class AssetService extends BaseService<AssetEntity> {
 
     private assetRepository: AssetRepository;
 
     constructor() {
-        this.assetRepository = getCustomRepository(AssetRepository);
+        super(getCustomRepository(AssetRepository));
     }
 
     async createNewAsset(assetDTO: AssetDTO) {
@@ -30,7 +32,7 @@ export class AssetService {
     }
 
     async getAssets() {
-        const assets = await this.assetRepository.fetchAssets();
+        const assets = await this.findAll();
         return assets;
     }
 
@@ -43,15 +45,7 @@ export class AssetService {
     }
 
     async deleteAsset(asset_id: number) {
-        return await this.assetRepository.deleteAsset(asset_id);
-    }
-
-    async getAssetOrFail(asset_id: number) {
-        try {
-            return await this.assetRepository.findOneOrFail(asset_id);
-        } catch (ex: unknown) {
-            throw new ErrorWithStatus(`There's no asset with id ${asset_id}`, 400);
-        }
+        return await this.delete(asset_id);
     }
 
     private async failIfAssetNameIsNotAvailable(asset_name: string) {
@@ -61,7 +55,7 @@ export class AssetService {
             }
         });
 
-        if (asset) throw new ErrorWithStatus(`There's already an asset named ${asset_name}`, 400);
+        if (asset) throw new ErrorWithStatus(400, `There's already an asset named ${asset_name}`);
     }
 
 }

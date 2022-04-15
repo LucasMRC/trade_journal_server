@@ -4,29 +4,31 @@ import { getCustomRepository } from 'typeorm';
 // Modules
 import {
     WithdrawalDTO,
-    WithdrawalRepository
+    WithdrawalRepository,
+    WithdrawalEntity
 } from '@modules/withdrawal';
 import { PlatformService } from '@modules/platform';
+import { BaseService } from '@modules/base';
 
 // Utils
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 
 @injectable()
-export class WithdrawalService {
+export class WithdrawalService extends BaseService<WithdrawalEntity> {
 
     private withdrawalRepository: WithdrawalRepository;
     private platformService: PlatformService;
 
     constructor() {
-        this.withdrawalRepository = getCustomRepository(WithdrawalRepository);
+        super(getCustomRepository(WithdrawalRepository));
         this.platformService = container.resolve(PlatformService);
     }
 
     async createNewWithdrawal(withdrawalDTO: WithdrawalDTO) {
-        const platform = await this.platformService.getPlatformOrFail(withdrawalDTO.platform_id);
+        const platform = await this.platformService.getOneOrFail(withdrawalDTO.platform_id);
 
         if (platform.current_amount < withdrawalDTO.amount)
-            throw new ErrorWithStatus(`The platform ${platform.name} doesn't have enough funds to withdraw ${withdrawalDTO.amount}`, 400);
+            throw new ErrorWithStatus(400, `The platform ${platform.name} doesn't have enough funds to withdraw ${withdrawalDTO.amount}`);
 
         /* Update current amount in the platform entity */
         platform.current_amount -= withdrawalDTO.amount;
@@ -36,17 +38,17 @@ export class WithdrawalService {
         return withdrawal;
     }
 
+    async deleteWithdrawal(withdrawal_id: number) {
+        return await this.delete(withdrawal_id);
+    }
+
     async getWithdrawals() {
-        const withdrawals = await this.withdrawalRepository.fetchWithdrawals();
+        const withdrawals = await this.findAll();
         return withdrawals;
     }
 
     async udpateWithdrawal(withdrawal_id: number, withdrawalDTO: Partial<WithdrawalDTO>) {
         return await this.withdrawalRepository.updateWithdrawal(withdrawal_id, withdrawalDTO);
-    }
-
-    async deleteWithdrawal(withdrawal_id: number) {
-        return await this.withdrawalRepository.deleteWithdrawal(withdrawal_id);
     }
 
 }

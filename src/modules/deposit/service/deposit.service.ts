@@ -4,23 +4,25 @@ import { getCustomRepository } from 'typeorm';
 // Modules
 import {
     DepositDTO,
-    DepositRepository
+    DepositRepository,
+    DepositEntity
 } from '@modules/deposit';
 import { PlatformService } from '@modules/platform';
+import { BaseService } from '@modules/base';
 
 @injectable()
-export class DepositService {
+export class DepositService extends BaseService<DepositEntity> {
 
     private depositRepository: DepositRepository;
     private readonly platformService: PlatformService;
 
     constructor() {
-        this.depositRepository = getCustomRepository(DepositRepository);
+        super(getCustomRepository(DepositRepository));
         this.platformService = container.resolve(PlatformService);
     }
 
     async createNewDeposit(depositDTO: DepositDTO) {
-        const platform = await this.platformService.getPlatformOrFail(depositDTO.platform_id);
+        const platform = await this.platformService.getOneOrFail(depositDTO.platform_id);
         /* Update current amount in the platform */
         platform.current_amount += depositDTO.amount;
         await this.platformService.updatePlatform(platform.id, platform);
@@ -30,7 +32,7 @@ export class DepositService {
     }
 
     async getDeposits() {
-        const deposits = await this.depositRepository.fetchDeposits();
+        const deposits = await this.findAll();
         return deposits;
     }
 
@@ -39,7 +41,7 @@ export class DepositService {
     }
 
     async deleteDeposit(deposit_id: number) {
-        return await this.depositRepository.deleteDeposit(deposit_id);
+        return await this.delete(deposit_id);
     }
 
 }

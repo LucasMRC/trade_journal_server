@@ -2,20 +2,21 @@ import { getCustomRepository } from 'typeorm';
 import { injectable, container } from 'tsyringe';
 
 // Modules
-import { SymbolDTO, SymbolRepository } from '@modules/symbol';
+import { SymbolDTO, SymbolRepository, SymbolEntity } from '@modules/symbol';
 import { AssetService } from '@modules/asset';
+import { BaseService } from '@modules/base';
 
 // Utils
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 
 @injectable()
-export class SymbolService {
+export class SymbolService extends BaseService<SymbolEntity> {
 
     private symbolRepository: SymbolRepository;
     private assetService: AssetService;
 
     constructor() {
-        this.symbolRepository = getCustomRepository(SymbolRepository);
+        super(getCustomRepository(SymbolRepository));
         this.assetService = container.resolve(AssetService);
     }
 
@@ -43,21 +44,13 @@ export class SymbolService {
     }
 
     async deleteSymbol(symbol_id: number) {
-        return await this.symbolRepository.deleteSymbol(symbol_id);
-    }
-
-    async getSymbolOrFail(symbol_id: number) {
-        try {
-            return await this.symbolRepository.findOneOrFail(symbol_id);
-        } catch (ex: unknown) {
-            throw new ErrorWithStatus(`Symbol with id ${symbol_id} not found`, 404);
-        }
+        return await this.delete(symbol_id);
     }
 
     private async failIfSymbolNameIsNotAvailableOrReturnAsset(symbolDTO: SymbolDTO) {
         const { asset_id, name } = symbolDTO;
 
-        const current_asset = await this.assetService.getAssetOrFail(asset_id);
+        const current_asset = await this.assetService.getOneOrFail(asset_id);
 
         const symbol = await this.symbolRepository.findOne({
             where: {
@@ -65,7 +58,7 @@ export class SymbolService {
             }
         });
 
-        if (symbol) throw new ErrorWithStatus(`There's already an symbol named ${name}`, 400);
+        if (symbol) throw new ErrorWithStatus(400, `There's already an symbol named ${name}`);
 
         return current_asset;
     }

@@ -1,19 +1,20 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository } from 'typeorm';
 import { instanceToInstance } from 'class-transformer';
 import { injectable } from 'tsyringe';
 
 // Modules
 import { TradeEntity, TradeDTO } from '@modules/trade';
+import { PlatformEntity } from '@modules/platform/';
+import { SymbolEntity } from '@modules/symbol';
+import { TimeframeEntity } from '@modules/timeframe';
+import { BaseRepository } from '@modules/base';
 
 // Utils
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
-import { PlatformEntity } from '@modules/platform/';
-import { SymbolEntity } from '../../symbol/models/symbol.entity';
-import { TimeframeEntity } from '../../timeframe/models/timeframe.entity';
 
 @injectable()
 @EntityRepository(TradeEntity)
-export class TradeRepository extends Repository<TradeEntity> {
+export class TradeRepository extends BaseRepository<TradeEntity> {
 
     async createNew(tradeDTO: TradeDTO, platform: PlatformEntity, symbol: SymbolEntity, timeframe: TimeframeEntity) {
         const newTrade: TradeEntity = this.create({
@@ -26,21 +27,9 @@ export class TradeRepository extends Repository<TradeEntity> {
         return instanceToInstance(newTrade);
     }
 
-    async fetchTrades() {
-        const trades = await this.find();
-        return instanceToInstance(trades);
-    }
-
-    async deleteTrade(trade_id: number) {
-        const trade = this.findOne(trade_id);
-        if (!trade) throw new ErrorWithStatus(`Trade with id ${trade_id} does not exist`, 400);
-
-        return this.softDelete(trade_id);
-    }
-
     async updateTrade(trade_id: number, tradeDTO: Partial<TradeDTO>) {
         const trade = this.findOne(trade_id);
-        if (!trade) throw new ErrorWithStatus(`Trade with id ${trade_id} does not exist`, 400);
+        if (!trade) throw new ErrorWithStatus(400, `Trade with id ${trade_id} does not exist`);
 
         return this.update(trade_id, tradeDTO);
     }

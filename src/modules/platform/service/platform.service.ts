@@ -2,18 +2,19 @@ import { getCustomRepository } from 'typeorm';
 import { injectable } from 'tsyringe';
 
 // Modules
-import { PlatformDTO, PlatformRepository } from '@modules/platform';
+import { PlatformDTO, PlatformRepository, PlatformEntity } from '@modules/platform';
 
 // Utils
 import ErrorWithStatus from '@src/utils/errors/ErrorWithStatus';
+import { BaseService } from '@modules/base';
 
 @injectable()
-export class PlatformService {
+export class PlatformService extends BaseService<PlatformEntity> {
 
     private platformRepository: PlatformRepository;
 
     constructor() {
-        this.platformRepository = getCustomRepository(PlatformRepository);
+        super(getCustomRepository(PlatformRepository));
     }
 
     async createNewPlatform(platformDTO: PlatformDTO) {
@@ -25,25 +26,17 @@ export class PlatformService {
     }
 
     async getPlatforms() {
-        const platforms = await this.platformRepository.fetchPlatforms();
+        const platforms = await this.findAll();
         return platforms;
+    }
+
+    async deletePlatform(platform_id: number) {
+        return await this.delete(platform_id);
     }
 
     async updatePlatform(platform_id: number, platformDTO: Partial<PlatformDTO>) {
         const updatedPlatform = await this.platformRepository.updatePlatform(platform_id, platformDTO);
         return updatedPlatform;
-    }
-
-    async deletePlatform(platform_id: number) {
-        return await this.platformRepository.deletePlatform(platform_id);
-    }
-
-    async getPlatformOrFail(platform_id: number) {
-        try {
-            return await this.platformRepository.findOneOrFail(platform_id);
-        } catch (ex: unknown) {
-            throw new ErrorWithStatus(`There's no platform with id ${platform_id}`, 400);
-        }
     }
 
     private async failIfPlatformNameIsNotAvailable(platform_name: string) {
@@ -53,7 +46,7 @@ export class PlatformService {
             }
         });
 
-        if (platform) throw new ErrorWithStatus(`There's already a platform named ${platform_name}`, 400);
+        if (platform) throw new ErrorWithStatus(400, `There's already a platform named ${platform_name}`);
     }
 
 }

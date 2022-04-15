@@ -1,10 +1,11 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository } from 'typeorm';
 import { instanceToInstance } from 'class-transformer';
 import { injectable } from 'tsyringe';
 
 // Modules
 import { DepositEntity, DepositDTO } from '@modules/deposit';
 import { PlatformEntity } from '@modules/platform';
+import { BaseRepository } from '@modules/base';
 
 // Utils
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
@@ -12,7 +13,7 @@ import { DateTransformer } from '@utils/transformers';
 
 @injectable()
 @EntityRepository(DepositEntity)
-export class DepositRepository extends Repository<DepositEntity> {
+export class DepositRepository extends BaseRepository<DepositEntity> {
 
     async createNew(depositDTO: DepositDTO, platform: PlatformEntity) {
         const { amount, date } = depositDTO;
@@ -26,21 +27,9 @@ export class DepositRepository extends Repository<DepositEntity> {
         return instanceToInstance(new_deposit);
     }
 
-    async fetchDeposits() {
-        const deposits = await this.find();
-        return instanceToInstance(deposits);
-    }
-
-    async deleteDeposit(deposit_id: number) {
-        const deposit = this.findOne(deposit_id);
-        if (!deposit) throw new ErrorWithStatus(`Deposit with id ${deposit_id} does not exist`, 400);
-
-        return this.softDelete(deposit_id);
-    }
-
     async updateDeposit(deposit_id: number, depositDTO: Partial<DepositDTO>) {
         const deposit = this.findOne(deposit_id);
-        if (!deposit) throw new ErrorWithStatus(`Deposit with id ${deposit_id} does not exist`, 400);
+        if (!deposit) throw new ErrorWithStatus(400, `Deposit with id ${deposit_id} does not exist`);
 
         return this.update(deposit_id, depositDTO);
     }

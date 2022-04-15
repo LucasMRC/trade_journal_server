@@ -4,19 +4,21 @@ import { getCustomRepository } from 'typeorm';
 // Modules
 import {
     TimeframeDTO,
-    TimeframeRepository
+    TimeframeRepository,
+    TimeframeEntity
 } from '@modules/timeframe';
+import { BaseService } from '@modules/base';
 
 // Utils
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 
 @injectable()
-export class TimeframeService {
+export class TimeframeService extends BaseService<TimeframeEntity> {
 
     private timeframeRepository: TimeframeRepository;
 
     constructor() {
-        this.timeframeRepository = getCustomRepository(TimeframeRepository);
+        super(getCustomRepository(TimeframeRepository));
     }
 
     async createNewTimeframe(timeframeDTO: TimeframeDTO) {
@@ -30,7 +32,7 @@ export class TimeframeService {
     }
 
     async getTimeframes() {
-        const timeframes = await this.timeframeRepository.fetchTimeframes();
+        const timeframes = await this.findAll();
         return timeframes;
     }
 
@@ -43,15 +45,7 @@ export class TimeframeService {
     }
 
     async deleteTimeframe(timeframe_id: number) {
-        return await this.timeframeRepository.deleteTimeframe(timeframe_id);
-    }
-
-    async getTimeframeOrFail(timeframe_id: number) {
-        try {
-            return await this.timeframeRepository.findOneOrFail(timeframe_id);
-        } catch (error) {
-            throw new ErrorWithStatus(`Timeframe with id ${timeframe_id} not found`, 404);
-        }
+        return await this.delete(timeframe_id);
     }
 
     private async failIfTimeframeNameIsNotAvailable(timeframe_name: string) {
@@ -61,7 +55,7 @@ export class TimeframeService {
             }
         });
 
-        if (timeframe) throw new ErrorWithStatus(`There's already an timeframe named ${timeframe_name}`, 400);
+        if (timeframe) throw new ErrorWithStatus(400, `There's already an timeframe named ${timeframe_name}`);
     }
 
 }

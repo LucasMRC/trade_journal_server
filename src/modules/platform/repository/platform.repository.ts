@@ -1,16 +1,17 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository } from 'typeorm';
 import { instanceToInstance, plainToInstance } from 'class-transformer';
 import { injectable } from 'tsyringe';
 
 // Modules
 import { PlatformEntity, PlatformDTO } from '@modules/platform';
+import { BaseRepository } from '@modules/base';
 
 // Utils
 import ErrorWithStatus from '@src/utils/errors/ErrorWithStatus';
 
 @injectable()
 @EntityRepository(PlatformEntity)
-export class PlatformRepository extends Repository<PlatformEntity> {
+export class PlatformRepository extends BaseRepository<PlatformEntity> {
 
     async createNew(platformDTO: PlatformDTO) {
         const { name, current_amount, initial_amount } = platformDTO;
@@ -23,21 +24,9 @@ export class PlatformRepository extends Repository<PlatformEntity> {
         return plainToInstance(PlatformEntity, newPlatform);
     }
 
-    async fetchPlatforms() {
-        const platforms = await this.find();
-        return instanceToInstance(platforms);
-    }
-
-    async deletePlatform(platform_id: number) {
-        const platform = this.findOne(platform_id);
-        if (!platform) throw new ErrorWithStatus(`Platform with id ${platform_id} does not exist`, 400);
-
-        return this.softDelete(platform_id);
-    }
-
     async updatePlatform(platform_id: number, platformDTO: Partial<PlatformDTO>) {
         const platform = this.findOne(platform_id);
-        if (!platform) throw new ErrorWithStatus(`Platform with id ${platform_id} does not exist`, 400);
+        if (!platform) throw new ErrorWithStatus(404, `Platform with id ${platform_id} does not exist`);
         await this.update(platform_id, platformDTO);
 
         const updatedPlatform = this.findOne(platform_id);

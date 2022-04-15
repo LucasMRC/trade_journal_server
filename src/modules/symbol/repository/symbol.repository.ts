@@ -1,17 +1,18 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository } from 'typeorm';
 import { instanceToInstance, plainToInstance } from 'class-transformer';
 import { injectable } from 'tsyringe';
 
 // Modules
 import { SymbolEntity, SymbolDTO } from '@modules/symbol';
 import { AssetEntity } from '@modules/asset';
+import { BaseRepository } from '@modules/base';
 
 // Utils
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 
 @injectable()
 @EntityRepository(SymbolEntity)
-export class SymbolRepository extends Repository<SymbolEntity> {
+export class SymbolRepository extends BaseRepository<SymbolEntity> {
 
     async createNew(symbol_name: string, asset: AssetEntity) {
         const newSymbol: SymbolEntity = new SymbolEntity(symbol_name, asset);
@@ -28,16 +29,9 @@ export class SymbolRepository extends Repository<SymbolEntity> {
         return instanceToInstance(symbols);
     }
 
-    async deleteSymbol(symbol_id: number) {
-        const symbol = this.findOne(symbol_id);
-        if (!symbol) throw new ErrorWithStatus(`Symbol with id ${symbol_id} does not exist`, 400);
-
-        return this.softDelete(symbol_id);
-    }
-
     async updateSymbol(symbol_id: number, symbolDTO: Partial<SymbolDTO>) {
         const symbol = this.findOne(symbol_id);
-        if (!symbol) throw new ErrorWithStatus(`Symbol with id ${symbol_id} does not exist`, 400);
+        if (!symbol) throw new ErrorWithStatus(404, `Symbol with id ${symbol_id} does not exist`);
 
         return this.update(symbol_id, symbolDTO);
     }

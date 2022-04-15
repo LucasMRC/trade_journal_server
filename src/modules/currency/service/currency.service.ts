@@ -4,19 +4,21 @@ import { getCustomRepository } from 'typeorm';
 // Modules
 import {
     CurrencyDTO,
-    CurrencyRepository
+    CurrencyRepository,
+    CurrencyEntity
 } from '@modules/currency';
+import { BaseService } from '@modules/base';
 
 // Utils
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 
 @injectable()
-export class CurrencyService {
+export class CurrencyService extends BaseService<CurrencyEntity> {
 
     private currencyRepository: CurrencyRepository;
 
     constructor() {
-        this.currencyRepository = getCustomRepository(CurrencyRepository);
+        super(getCustomRepository(CurrencyRepository));
     }
 
     async createNewCurrency(currencyDTO: CurrencyDTO) {
@@ -30,7 +32,7 @@ export class CurrencyService {
     }
 
     async getCurrencies() {
-        const currencys = await this.currencyRepository.fetchCurrencies();
+        const currencys = await this.findAll();
         return currencys;
     }
 
@@ -43,16 +45,9 @@ export class CurrencyService {
     }
 
     async deleteCurrency(currency_id: number) {
-        return await this.currencyRepository.deleteCurrency(currency_id);
+        return await this.delete(currency_id);
     }
 
-    async getCurrencyOrFail(currency_id: number) {
-        try {
-            return await this.currencyRepository.findOneOrFail(currency_id);
-        } catch (error) {
-            throw new ErrorWithStatus(`Currency with id ${currency_id} not found`, 404);
-        }
-    }
 
     private async failIfCurrencyNameIsNotAvailable(currency_name: string) {
         const currency = await this.currencyRepository.findOne({
@@ -61,7 +56,7 @@ export class CurrencyService {
             }
         });
 
-        if (currency) throw new ErrorWithStatus(`There's already an currency named ${currency_name}`, 400);
+        if (currency) throw new ErrorWithStatus(400, `There's already an currency named ${currency_name}`);
     }
 
 }

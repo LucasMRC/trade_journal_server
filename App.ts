@@ -9,6 +9,7 @@ import { createConnection } from 'typeorm';
 
 // Config
 import { connectionConfig } from '@config/database';
+import { configCloudinary } from '@config/cloudinary';
 import configExpress, { ErrorHandler } from '@config/express';
 import configRoutes from '@config/routes';
 
@@ -17,6 +18,9 @@ const PORT = process.env.SERVER_PORT;
 createConnection(connectionConfig)
     .then(() => {
         console.log('🔌[database] Database connected.');
+
+        configCloudinary()
+            .then(() => console.log('☁️ [cloudinary] Cloudinary connected.'));
 
         const app = express();
 

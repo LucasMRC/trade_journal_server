@@ -17,6 +17,7 @@ export class SymbolService extends BaseService<SymbolEntity> {
 
     constructor() {
         super(getCustomRepository(SymbolRepository));
+        this.symbolRepository = getCustomRepository(SymbolRepository);
         this.assetService = container.resolve(AssetService);
     }
 

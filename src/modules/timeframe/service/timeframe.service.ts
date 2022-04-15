@@ -19,6 +19,7 @@ export class TimeframeService extends BaseService<TimeframeEntity> {
 
     constructor() {
         super(getCustomRepository(TimeframeRepository));
+        this.timeframeRepository = getCustomRepository(TimeframeRepository);
     }
 
     async createNewTimeframe(timeframeDTO: TimeframeDTO) {

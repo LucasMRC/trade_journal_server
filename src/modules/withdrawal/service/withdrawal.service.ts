@@ -21,6 +21,7 @@ export class WithdrawalService extends BaseService<WithdrawalEntity> {
 
     constructor() {
         super(getCustomRepository(WithdrawalRepository));
+        this.withdrawalRepository = getCustomRepository(WithdrawalRepository);
         this.platformService = container.resolve(PlatformService);
     }
 

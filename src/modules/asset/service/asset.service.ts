@@ -9,9 +9,6 @@ import {
 } from '@modules/asset';
 import { BaseService } from '@modules/base';
 
-// Utils
-import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
-
 @injectable()
 export class AssetService extends BaseService<AssetEntity> {
 
@@ -19,11 +16,12 @@ export class AssetService extends BaseService<AssetEntity> {
 
     constructor() {
         super(getCustomRepository(AssetRepository));
+        this.assetRepository = getCustomRepository(AssetRepository);
     }
 
     async createNewAsset(assetDTO: AssetDTO) {
         const { name } = assetDTO;
-        await this.failIfAssetNameIsNotAvailable(name);
+        await this.assetRepository.failIfNameIsNotAvailable(name);
         // App's convention: asset names are uppercase
         assetDTO.name = name.toUpperCase();
 
@@ -46,16 +44,6 @@ export class AssetService extends BaseService<AssetEntity> {
 
     async deleteAsset(asset_id: number) {
         return await this.delete(asset_id);
-    }
-
-    private async failIfAssetNameIsNotAvailable(asset_name: string) {
-        const asset = await this.assetRepository.findOne({
-            where: {
-                name: asset_name.toUpperCase()
-            }
-        });
-
-        if (asset) throw new ErrorWithStatus(400, `There's already an asset named ${asset_name}`);
     }
 
 }

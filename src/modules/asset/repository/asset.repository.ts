@@ -25,4 +25,9 @@ export class AssetRepository extends BaseRepository<AssetEntity> {
 
         return this.update(asset_id, assetDTO);
     }
+
+    async failIfNameIsNotAvailable(asset_name: string) {
+        const asset = await this.findOne({ name: asset_name });
+        if (asset) throw new ErrorWithStatus(400, `There's already an asset named ${asset_name}`);
+    }
 }

@@ -19,6 +19,7 @@ export class CurrencyService extends BaseService<CurrencyEntity> {
 
     constructor() {
         super(getCustomRepository(CurrencyRepository));
+        this.currencyRepository = getCustomRepository(CurrencyRepository);
     }
 
     async createNewCurrency(currencyDTO: CurrencyDTO) {

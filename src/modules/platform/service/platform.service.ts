@@ -15,6 +15,7 @@ export class PlatformService extends BaseService<PlatformEntity> {
 
     constructor() {
         super(getCustomRepository(PlatformRepository));
+        this.platformRepository = getCustomRepository(PlatformRepository);
     }
 
     async createNewPlatform(platformDTO: PlatformDTO) {

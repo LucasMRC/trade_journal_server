@@ -1,3 +1,5 @@
+import { instanceToInstance } from 'class-transformer';
+
 // Modules
 import {
     BaseRepository
@@ -6,7 +8,6 @@ import {
 // Utils
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 import { capitalize } from '@utils/functions';
-import { instanceToInstance } from 'class-transformer';
 
 export class BaseService<T> {
 

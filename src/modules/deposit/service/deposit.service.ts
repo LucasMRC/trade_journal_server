@@ -18,6 +18,7 @@ export class DepositService extends BaseService<DepositEntity> {
 
     constructor() {
         super(getCustomRepository(DepositRepository));
+        this.depositRepository = getCustomRepository(DepositRepository);
         this.platformService = container.resolve(PlatformService);
     }
 

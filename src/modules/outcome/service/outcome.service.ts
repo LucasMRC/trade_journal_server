@@ -19,6 +19,7 @@ export class OutcomeService extends BaseService<OutcomeEntity> {
 
     constructor() {
         super(getCustomRepository(OutcomeRepository));
+        this.outcomeRepository = getCustomRepository(OutcomeRepository);
     }
 
     async createNewOutcome(outcomeDTO: OutcomeDTO) {

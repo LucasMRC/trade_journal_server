@@ -22,6 +22,7 @@ export class TradeService extends BaseService<TradeEntity> {
 
     constructor() {
         super(getCustomRepository(TradeRepository));
+        this.tradeRepository = getCustomRepository(TradeRepository);
         this.platformService = container.resolve(PlatformService);
         this.timeframeService = container.resolve(TimeframeService);
         this.symbolService = container.resolve(SymbolService);

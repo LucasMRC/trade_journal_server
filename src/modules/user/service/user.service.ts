@@ -1,6 +1,6 @@
 
 import { injectable } from 'tsyringe';
-import { getCustomRepository, FindOneOptions } from 'typeorm';
+import { FindOneOptions } from 'typeorm';
 import bcrypt from 'bcrypt';
 
 // Modules
@@ -11,14 +11,18 @@ import { UserEntity, UserRepository, UserDTO, TokenDTO } from '@modules/user';
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 import { createToken } from '@utils/auth';
 import { cache } from '@utils/auth/cache';
+import { connection } from 'App';
 
 @injectable()
 export class UserService extends BaseService<UserEntity> {
     private userRepository: UserRepository;
 
     constructor() {
-        super();
-        this.userRepository = getCustomRepository(UserRepository);
+        super(UserEntity);
+        this.userRepository = new UserRepository(
+            UserEntity,
+            connection.createEntityManager()
+        );
     }
 
     async getUser(id: number) {

@@ -18,7 +18,7 @@ export class CurrencyService extends BaseService<CurrencyEntity> {
     private currencyRepository: CurrencyRepository;
 
     constructor() {
-        super();
+        super(CurrencyEntity);
         this.currencyRepository = getCustomRepository(CurrencyRepository);
     }
 

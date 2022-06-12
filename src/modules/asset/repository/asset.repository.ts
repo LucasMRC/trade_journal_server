@@ -7,9 +7,6 @@ import { AssetEntity } from '@modules/asset/models/asset.entity';
 import { AssetDTO } from '@modules/asset/models/asset.dto';
 import { BaseRepository } from '@modules/base';
 
-// Utils
-import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
-
 @injectable()
 @EntityRepository(AssetEntity)
 export class AssetRepository extends BaseRepository<AssetEntity> {
@@ -20,14 +17,6 @@ export class AssetRepository extends BaseRepository<AssetEntity> {
     }
 
     async updateAsset(asset_id: number, assetDTO: Partial<AssetDTO>) {
-        const asset = this.findOne(asset_id);
-        if (!asset) throw new ErrorWithStatus(400, `Asset with id ${asset_id} does not exist`);
-
         return this.update(asset_id, assetDTO);
-    }
-
-    async failIfNameIsNotAvailable(asset_name: string) {
-        const asset = await this.findOne({ name: asset_name });
-        if (asset) throw new ErrorWithStatus(400, `There's already an asset named ${asset_name}`);
     }
 }

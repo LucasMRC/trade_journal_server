@@ -9,11 +9,11 @@ import {
     updateCurrency
 } from '@modules/currency/controller/currency.controller';
 
-const router = Router();
+const CurrencyRoutes = Router();
 
-router.post('/create', createNewCurrency);
-router.get('/', getCurrencies);
-router.delete('/:id', deleteCurrency);
-router.put('/:id', updateCurrency);
+CurrencyRoutes.post('/create', createNewCurrency);
+CurrencyRoutes.get('/', getCurrencies);
+CurrencyRoutes.delete('/:id', deleteCurrency);
+CurrencyRoutes.put('/:id', updateCurrency);
 
-export default router;
+export { CurrencyRoutes };

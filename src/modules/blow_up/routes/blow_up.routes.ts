@@ -1,5 +1,5 @@
 import { Router } from 'express';
 
-const router = Router();
+const BlowUpRoutes = Router();
 
-export default router;
+export { BlowUpRoutes };

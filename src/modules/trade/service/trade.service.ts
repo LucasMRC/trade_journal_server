@@ -29,9 +29,9 @@ export class TradeService extends BaseService<TradeEntity> {
     }
 
     async createNewTrade(tradeDTO: TradeDTO) {
-        const platform = await this.platformService.getOneOrFail(tradeDTO.platform_id);
-        const timeframe = await this.timeframeService.getOneOrFail(tradeDTO.timeframe_id);
-        const symbol = await this.symbolService.getOneOrFail(tradeDTO.symbol_id);
+        const platform = await this.platformService.findOneOrFail(tradeDTO.platform_id);
+        const timeframe = await this.timeframeService.findOneOrFail(tradeDTO.timeframe_id);
+        const symbol = await this.symbolService.findOneOrFail(tradeDTO.symbol_id);
 
         const trade = await this.tradeRepository.createNew(tradeDTO, platform, symbol, timeframe);
         return trade;
@@ -43,6 +43,8 @@ export class TradeService extends BaseService<TradeEntity> {
     }
 
     async udpateTrade(trade_id: number, tradeDTO: Partial<TradeDTO>) {
+        this.findOneOrFail(trade_id);
+
         return await this.tradeRepository.updateTrade(trade_id, tradeDTO);
     }
 

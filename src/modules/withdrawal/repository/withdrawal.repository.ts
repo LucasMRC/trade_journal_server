@@ -8,7 +8,6 @@ import { PlatformEntity } from '@modules/platform';
 import { BaseRepository } from '@modules/base';
 
 // Utils
-import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 import { DateTransformer } from '@utils/transformers';
 
 @injectable()
@@ -28,9 +27,6 @@ export class WithdrawalRepository extends BaseRepository<WithdrawalEntity> {
     }
 
     async updateWithdrawal(withdrawal_id: number, withdrawalDTO: Partial<WithdrawalDTO>) {
-        const withdrawal = this.findOne(withdrawal_id);
-        if (!withdrawal) throw new ErrorWithStatus(404, `Withdrawal with id ${withdrawal_id} does not exist`);
-
         return this.update(withdrawal_id, withdrawalDTO);
     }
 

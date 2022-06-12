@@ -42,6 +42,7 @@ export class CurrencyService extends BaseService<CurrencyEntity> {
         if (name)
             currencyDTO.name = name.toUpperCase();
 
+        this.findOneOrFail(currency_id);
         return await this.currencyRepository.updateCurrency(currency_id, currencyDTO);
     }
 

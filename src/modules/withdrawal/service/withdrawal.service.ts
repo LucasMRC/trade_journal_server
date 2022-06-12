@@ -26,7 +26,7 @@ export class WithdrawalService extends BaseService<WithdrawalEntity> {
     }
 
     async createNewWithdrawal(withdrawalDTO: WithdrawalDTO) {
-        const platform = await this.platformService.getOneOrFail(withdrawalDTO.platform_id);
+        const platform = await this.platformService.findOneOrFail(withdrawalDTO.platform_id);
 
         if (platform.current_amount < withdrawalDTO.amount)
             throw new ErrorWithStatus(400, `The platform ${platform.name} doesn't have enough funds to withdraw ${withdrawalDTO.amount}`);
@@ -49,6 +49,7 @@ export class WithdrawalService extends BaseService<WithdrawalEntity> {
     }
 
     async udpateWithdrawal(withdrawal_id: number, withdrawalDTO: Partial<WithdrawalDTO>) {
+        this.findOneOrFail(withdrawal_id);
         return await this.withdrawalRepository.updateWithdrawal(withdrawal_id, withdrawalDTO);
     }
 

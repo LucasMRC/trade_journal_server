@@ -1,12 +1,13 @@
 import { getCustomRepository } from 'typeorm';
 import { injectable } from 'tsyringe';
+import { instanceToInstance } from 'class-transformer';
 
 // Modules
 import { PlatformDTO, PlatformRepository, PlatformEntity } from '@modules/platform';
+import { BaseService } from '@modules/base';
 
 // Utils
 import ErrorWithStatus from '@src/utils/errors/ErrorWithStatus';
-import { BaseService } from '@modules/base';
 
 @injectable()
 export class PlatformService extends BaseService<PlatformEntity> {
@@ -36,8 +37,13 @@ export class PlatformService extends BaseService<PlatformEntity> {
     }
 
     async updatePlatform(platform_id: number, platformDTO: Partial<PlatformDTO>) {
-        const updatedPlatform = await this.platformRepository.updatePlatform(platform_id, platformDTO);
-        return updatedPlatform;
+        this.findOneOrFail(platform_id);
+
+        await this.platformRepository.updatePlatform(platform_id, platformDTO);
+
+        const updatedPlatform = this.findOne(platform_id);
+        return instanceToInstance(updatedPlatform);
+
     }
 
     private async failIfPlatformNameIsNotAvailable(platform_name: string) {

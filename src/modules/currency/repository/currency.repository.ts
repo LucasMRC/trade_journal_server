@@ -6,9 +6,6 @@ import { injectable } from 'tsyringe';
 import { CurrencyEntity, CurrencyDTO } from '@modules/currency';
 import { BaseRepository } from '@modules/base';
 
-// Utils
-import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
-
 @injectable()
 @EntityRepository(CurrencyEntity)
 export class CurrencyRepository extends BaseRepository<CurrencyEntity> {
@@ -19,9 +16,6 @@ export class CurrencyRepository extends BaseRepository<CurrencyEntity> {
     }
 
     async updateCurrency(currency_id: number, currencyDTO: Partial<CurrencyDTO>) {
-        const currency = this.findOne(currency_id);
-        if (!currency) throw new ErrorWithStatus(404, `Currency with id ${currency_id} does not exist`);
-
         return this.update(currency_id, currencyDTO);
     }
 }

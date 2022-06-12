@@ -1,13 +1,10 @@
 import { EntityRepository } from 'typeorm';
-import { instanceToInstance, plainToInstance } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { injectable } from 'tsyringe';
 
 // Modules
 import { PlatformEntity, PlatformDTO } from '@modules/platform';
 import { BaseRepository } from '@modules/base';
-
-// Utils
-import ErrorWithStatus from '@src/utils/errors/ErrorWithStatus';
 
 @injectable()
 @EntityRepository(PlatformEntity)
@@ -25,11 +22,6 @@ export class PlatformRepository extends BaseRepository<PlatformEntity> {
     }
 
     async updatePlatform(platform_id: number, platformDTO: Partial<PlatformDTO>) {
-        const platform = this.findOne(platform_id);
-        if (!platform) throw new ErrorWithStatus(404, `Platform with id ${platform_id} does not exist`);
         await this.update(platform_id, platformDTO);
-
-        const updatedPlatform = this.findOne(platform_id);
-        return instanceToInstance(updatedPlatform);
     }
 }

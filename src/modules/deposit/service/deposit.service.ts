@@ -23,7 +23,7 @@ export class DepositService extends BaseService<DepositEntity> {
     }
 
     async createNewDeposit(depositDTO: DepositDTO) {
-        const platform = await this.platformService.getOneOrFail(depositDTO.platform_id);
+        const platform = await this.platformService.findOneOrFail(depositDTO.platform_id);
         /* Update current amount in the platform */
         platform.current_amount += depositDTO.amount;
         await this.platformService.updatePlatform(platform.id, platform);
@@ -38,6 +38,7 @@ export class DepositService extends BaseService<DepositEntity> {
     }
 
     async udpateDeposit(deposit_id: number, depositDTO: Partial<DepositDTO>) {
+        this.findOne(deposit_id);
         return await this.depositRepository.updateDeposit(deposit_id, depositDTO);
     }
 

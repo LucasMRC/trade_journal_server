@@ -6,11 +6,11 @@ import {
     updateOutcome
 } from '../controller/outcome.controller';
 
-const router = Router();
+const OutcomeRoutes = Router();
 
-router.post('/create', createNewOutcome);
-router.get('/', getOutcomes);
-router.delete('/:id', deleteOutcome);
-router.put('/:id', updateOutcome);
+OutcomeRoutes.post('/create', createNewOutcome);
+OutcomeRoutes.get('/', getOutcomes);
+OutcomeRoutes.delete('/:id', deleteOutcome);
+OutcomeRoutes.put('/:id', updateOutcome);
 
-export default router;
+export { OutcomeRoutes };

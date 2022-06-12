@@ -6,11 +6,11 @@ import {
     updateSymbol
 } from '@modules/symbol/controller/symbol.controller';
 
-const router = Router();
+const SymbolRoutes = Router();
 
-router.post('/create', createNewSymbol);
-router.get('/', getSymbols);
-router.delete('/:id', deleteSymbol);
-router.put('/:id', updateSymbol);
+SymbolRoutes.post('/create', createNewSymbol);
+SymbolRoutes.get('/', getSymbols);
+SymbolRoutes.delete('/:id', deleteSymbol);
+SymbolRoutes.put('/:id', updateSymbol);
 
-export default router;
+export { SymbolRoutes };

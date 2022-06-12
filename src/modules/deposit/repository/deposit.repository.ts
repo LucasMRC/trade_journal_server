@@ -8,7 +8,6 @@ import { PlatformEntity } from '@modules/platform';
 import { BaseRepository } from '@modules/base';
 
 // Utils
-import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 import { DateTransformer } from '@utils/transformers';
 
 @injectable()
@@ -28,9 +27,6 @@ export class DepositRepository extends BaseRepository<DepositEntity> {
     }
 
     async updateDeposit(deposit_id: number, depositDTO: Partial<DepositDTO>) {
-        const deposit = this.findOne(deposit_id);
-        if (!deposit) throw new ErrorWithStatus(400, `Deposit with id ${deposit_id} does not exist`);
-
         return this.update(deposit_id, depositDTO);
     }
 

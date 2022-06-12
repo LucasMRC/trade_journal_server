@@ -9,11 +9,11 @@ import {
     updateAsset
 } from '@modules/asset/controller/asset.controller';
 
-const router = Router();
+const AssetRoutes = Router();
 
-router.post('/create', createNewAsset);
-router.get('/', getAssets);
-router.delete('/:id', deleteAsset);
-router.put('/:id', updateAsset);
+AssetRoutes.post('/create', createNewAsset);
+AssetRoutes.get('/', getAssets);
+AssetRoutes.delete('/:id', deleteAsset);
+AssetRoutes.put('/:id', updateAsset);
 
-export default router;
+export { AssetRoutes };

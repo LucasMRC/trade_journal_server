@@ -1,14 +1,6 @@
 
-import { CurrencyDTO } from '@modules/currency/models/currency.dto';
-import { CurrencyEntity } from '@modules/currency/models/currency.entity';
-import { CurrencyService } from '@modules/currency/service/currency.service';
-import CurrencyRoutes from '@modules/currency/routes/currency.routes';
-import { CurrencyRepository } from '@modules/currency/repository/currency.repository';
-
-export {
-    CurrencyDTO,
-    CurrencyEntity,
-    CurrencyService,
-    CurrencyRoutes,
-    CurrencyRepository
-};
+export * from '@modules/currency/models/currency.dto';
+export * from '@modules/currency/models/currency.entity';
+export * from '@modules/currency/service/currency.service';
+export * from '@modules/currency/routes/currency.routes';
+export * from '@modules/currency/repository/currency.repository';

@@ -6,11 +6,11 @@ import {
     updateTimeframe
 } from '../controller/timeframe.controller';
 
-const router = Router();
+const TimeframeRoutes = Router();
 
-router.post('/create', createNewTimeframe);
-router.get('/', getTimeframes);
-router.delete('/:id', deleteTimeframe);
-router.put('/:id', updateTimeframe);
+TimeframeRoutes.post('/create', createNewTimeframe);
+TimeframeRoutes.get('/', getTimeframes);
+TimeframeRoutes.delete('/:id', deleteTimeframe);
+TimeframeRoutes.put('/:id', updateTimeframe);
 
-export default router;
+export { TimeframeRoutes };

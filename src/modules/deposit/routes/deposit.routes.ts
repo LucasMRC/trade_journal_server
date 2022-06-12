@@ -8,11 +8,11 @@ import {
     updateDeposit
 } from '../controller/deposit.controller';
 
-const router = Router();
+const DepositRoutes = Router();
 
-router.post('/create', createNewDeposit);
-router.get('/', getDeposits);
-router.delete('/:id', deleteDeposit);
-router.put('/:id', updateDeposit);
+DepositRoutes.post('/create', createNewDeposit);
+DepositRoutes.get('/', getDeposits);
+DepositRoutes.delete('/:id', deleteDeposit);
+DepositRoutes.put('/:id', updateDeposit);
 
-export default router;
+export { DepositRoutes };

@@ -42,6 +42,7 @@ export class OutcomeService extends BaseService<OutcomeEntity> {
         if (name)
             outcomeDTO.name = name.toUpperCase();
 
+        this.findOneOrFail(outcome_id);
         return await this.outcomeRepository.updateOutcome(outcome_id, outcomeDTO);
     }
 

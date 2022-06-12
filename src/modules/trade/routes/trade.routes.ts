@@ -8,11 +8,11 @@ import {
     updateTrade
 } from '@modules/trade/controller/trade.controller';
 
-const router = Router();
+const TradeRoutes = Router();
 
-router.post('/create', createNewTrade);
-router.get('/', getTrades);
-router.delete('/:id', deleteTrade);
-router.put('/:id', updateTrade);
+TradeRoutes.post('/create', createNewTrade);
+TradeRoutes.get('/', getTrades);
+TradeRoutes.delete('/:id', deleteTrade);
+TradeRoutes.put('/:id', updateTrade);
 
-export default router;
+export { TradeRoutes };

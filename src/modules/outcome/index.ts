@@ -1,14 +1,6 @@
 
-import { OutcomeEntity } from './models/outcome.entity';
-import { OutcomeDTO } from './models/outcome.dto';
-import { OutcomeRepository } from './repository/outcome.repository';
-import { OutcomeService } from './service/outcome.service';
-import OutcomeRoutes from '@modules/outcome/routes/outcome.routes';
-
-export {
-    OutcomeEntity,
-    OutcomeService,
-    OutcomeRepository,
-    OutcomeDTO,
-    OutcomeRoutes
-};
+export * from './models/outcome.entity';
+export * from './models/outcome.dto';
+export * from './repository/outcome.repository';
+export * from './service/outcome.service';
+export * from '@modules/outcome/routes/outcome.routes';

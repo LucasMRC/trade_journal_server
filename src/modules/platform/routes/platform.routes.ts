@@ -7,11 +7,11 @@ import {
     updatePlatform
 } from '@modules/platform/controller/platform.controller';
 
-const router = Router();
+const PlatformRoutes = Router();
 
-router.post('/create', createNewPlatform);
-router.get('/', getAllPlatforms);
-router.delete('/:id', deletePlatform);
-router.put('/:id', updatePlatform);
+PlatformRoutes.post('/create', createNewPlatform);
+PlatformRoutes.get('/', getAllPlatforms);
+PlatformRoutes.delete('/:id', deletePlatform);
+PlatformRoutes.put('/:id', updatePlatform);
 
-export default router;
+export { PlatformRoutes };

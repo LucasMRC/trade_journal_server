@@ -1,10 +1,4 @@
 
-import { BaseEntity } from './models/base.entity';
-import { BaseService } from './service/base.service';
-import { BaseRepository } from './repositories/base.repository';
-
-export {
-    BaseEntity,
-    BaseService,
-    BaseRepository
-};
+export * from './models/base.entity';
+export * from './service/base.service';
+export * from './repositories/base.repository';

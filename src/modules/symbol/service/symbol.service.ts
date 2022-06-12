@@ -41,6 +41,7 @@ export class SymbolService extends BaseService<SymbolEntity> {
         if (name)
             symbolDTO.name = name.toUpperCase();
 
+        this.findOneOrFail(symbol_id);
         return await this.symbolRepository.updateSymbol(symbol_id, symbolDTO);
     }
 
@@ -51,7 +52,7 @@ export class SymbolService extends BaseService<SymbolEntity> {
     private async failIfSymbolNameIsNotAvailableOrReturnAsset(symbolDTO: SymbolDTO) {
         const { asset_id, name } = symbolDTO;
 
-        const current_asset = await this.assetService.getOneOrFail(asset_id);
+        const current_asset = await this.assetService.findOneOrFail(asset_id);
 
         const symbol = await this.symbolRepository.findOne({
             where: {

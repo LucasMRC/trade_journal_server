@@ -41,6 +41,7 @@ export class TimeframeService extends BaseService<TimeframeEntity> {
         const { name } = timeframeDTO;
         if (name)
             timeframeDTO.name = name.toUpperCase();
+        this.findOneOrFail(timeframe_id);
 
         return await this.timeframeRepository.updateTimeframe(timeframe_id, timeframeDTO);
     }

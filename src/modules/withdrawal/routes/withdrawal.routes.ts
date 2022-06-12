@@ -8,11 +8,11 @@ import {
     updateWithdrawal
 } from '../controller/withdrawal.controller';
 
-const router = Router();
+const WithdrawalRoutes = Router();
 
-router.post('/create', createNewWithdrawal);
-router.get('/', getWithdrawals);
-router.delete('/:id', deleteWithdrawal);
-router.put('/:id', updateWithdrawal);
+WithdrawalRoutes.post('/create', createNewWithdrawal);
+WithdrawalRoutes.get('/', getWithdrawals);
+WithdrawalRoutes.delete('/:id', deleteWithdrawal);
+WithdrawalRoutes.put('/:id', updateWithdrawal);
 
-export default router;
+export { WithdrawalRoutes };

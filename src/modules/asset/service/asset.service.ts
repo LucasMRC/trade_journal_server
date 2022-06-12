@@ -1,5 +1,5 @@
 import { injectable } from 'tsyringe';
-import { getCustomRepository } from 'typeorm';
+import { FindOneOptions, getCustomRepository } from 'typeorm';
 
 // Modules
 import {
@@ -8,6 +8,9 @@ import {
     AssetRepository
 } from '@modules/asset';
 import { BaseService } from '@modules/base';
+
+// Utils
+import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 
 @injectable()
 export class AssetService extends BaseService<AssetEntity> {
@@ -21,7 +24,7 @@ export class AssetService extends BaseService<AssetEntity> {
 
     async createNewAsset(assetDTO: AssetDTO) {
         const { name } = assetDTO;
-        await this.assetRepository.failIfNameIsNotAvailable(name);
+        await this.failIfNameIsNotAvailable(name);
         // App's convention: asset names are uppercase
         assetDTO.name = name.toUpperCase();
 
@@ -39,11 +42,17 @@ export class AssetService extends BaseService<AssetEntity> {
         if (name)
             assetDTO.name = name.toUpperCase();
 
+        this.findOneOrFail(asset_id);
         return await this.assetRepository.updateAsset(asset_id, assetDTO);
     }
 
     async deleteAsset(asset_id: number) {
         return await this.delete(asset_id);
+    }
+
+    async failIfNameIsNotAvailable(asset_name: string) {
+        const asset = await this.assetRepository.findOne({ name: asset_name } as FindOneOptions<AssetEntity>);
+        if (asset) throw new ErrorWithStatus(400, `There's already an asset named ${asset_name}`);
     }
 
 }

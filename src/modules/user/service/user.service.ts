@@ -21,4 +21,12 @@ export class UserService extends BaseService<UserEntity> {
         return user;
     }
 
+    async handleSignIn(_username: string) {
+        return;
+    }
+
+    async handleLoginUser(_username: string) {
+        return;
+    }
+
 }

@@ -2,14 +2,16 @@ import { instanceToInstance } from 'class-transformer';
 
 // Modules
 import {
-    BaseRepository
+    BaseRepository,
+    BaseEntity
 } from '@modules/base';
 
 // Utils
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 import { capitalize } from '@utils/functions';
+import { FindOneOptions } from 'typeorm';
 
-export class BaseService<T> {
+export class BaseService<T extends BaseEntity> {
 
     private entity_type: string;
 
@@ -17,9 +19,12 @@ export class BaseService<T> {
         this.entity_type = capitalize(this.repository.metadata.tableName);
     }
 
+    async findOne(entity_id: number): Promise<T | null> {
+        return await this.repository.findOne({ id: entity_id } as FindOneOptions<T>);
+    }
+
     async delete(entity_id: number) {
-        const entity = this.repository.findOne(entity_id);
-        if (!entity) throw new ErrorWithStatus(400, `${this.entity_type} with id ${entity_id} does not exist`);
+        await this.findOneOrFail(entity_id);
 
         try {
             await this.repository.softDelete(entity_id);
@@ -30,12 +35,12 @@ export class BaseService<T> {
         }
     }
 
-    async getOneOrFail(entity_id: number): Promise<T> {
-        try {
-            return await this.repository.findOneOrFail(entity_id);
-        } catch (ex: unknown) {
+    async findOneOrFail(entity_id: number): Promise<T> {
+        const entity = await this.findOne(entity_id);
+        if (!entity) {
             throw new ErrorWithStatus(404, `${this.entity_type} with id ${entity_id} was not found`);
         }
+        return entity;
     }
 
     async findAll(): Promise<T[]> {

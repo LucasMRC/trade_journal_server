@@ -10,11 +10,11 @@ import {
 
 const UserRoutes = Router();
 
-UserRoutes.get('/:username', getUser);
+UserRoutes.get('/:id', AuthGuard, getUser);
 
 UserRoutes.post('/register', register);
 
-UserRoutes.post('/login', AuthGuard, loginUser);
+UserRoutes.post('/login', loginUser);
 
 UserRoutes.post('/logout', AuthGuard, logoutUser);
 

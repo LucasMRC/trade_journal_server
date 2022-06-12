@@ -11,7 +11,10 @@ export interface AuthRequest extends Request {
 
 export const AuthGuard = async (req: AuthRequest, res: Response, next: NextFunction) => {
     let token = req.headers.authorization;
-    if (!token) return res.status(400).json({ error: 'Authorization header is missing.' });
+    if (!token) {
+        const error = new ErrorWithStatus(401, 'Unauthorized.');
+        next(error);
+    }
     else {
         if (token.startsWith('Bearer ')) token = token.slice(7, token.length);
         try {
@@ -19,7 +22,7 @@ export const AuthGuard = async (req: AuthRequest, res: Response, next: NextFunct
             /* ---------------------- Check For Blacklisted Tokens ---------------------- */
             const isBlackListed = await cache.get(token);
             if (isBlackListed) {
-                const error = new ErrorWithStatus(401, 'Token is blacklisted.');
+                const error = new ErrorWithStatus(401, 'Session has expired.');
                 next(error);
             }
 

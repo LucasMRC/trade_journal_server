@@ -4,11 +4,15 @@ import { UserService } from '../service/user.service';
 import { UserDTO, TokenDTO } from '@modules/user';
 
 
-export const getUser = async (req: Request, res: Response, _next?: CallableFunction) => {
+export const getUser = async (req: Request, res: Response, next: CallableFunction) => {
     const { id } = req.params;
     const userService = container.resolve(UserService);
-    const user = await userService.getUser(Number(id));
-    res.send(user);
+    try {
+        const user = await userService.getUser(Number(id));
+        res.send(user);
+    } catch (error) {
+        next(error);
+    }
 };
 
 export const register = async (req: Request, res: Response, next: CallableFunction) => {
@@ -22,16 +26,26 @@ export const register = async (req: Request, res: Response, next: CallableFuncti
     }
 };
 
-export const loginUser = async (req: Request, res: Response, _next?: CallableFunction) => {
+export const loginUser = async (req: Request, res: Response, next: CallableFunction) => {
     const user_dto = req.body as UserDTO;
     const userService = container.resolve(UserService);
-    const user = await userService.handleLoginUser(user_dto);
-    res.send(user);
+    try {
+        const { access_token, expires_in } = await userService.handleLoginUser(user_dto);
+        res.setHeader('Authorization', access_token)
+            .status(200)
+            .send({ expires_in });
+    } catch (error) {
+        next(error);
+    }
 };
 
-export const logoutUser = async (req: Request, res: Response, _next?: CallableFunction) => {
+export const logoutUser = async (req: Request, res: Response, next: CallableFunction) => {
     const token_dto = req.body as TokenDTO;
     const userService = container.resolve(UserService);
-    await userService.handleLogoutUser(token_dto);
-    res.status(200).send();
+    try {
+        await userService.handleLogoutUser(token_dto);
+        res.status(200).send();
+    } catch (error) {
+        next(error);
+    }
 };

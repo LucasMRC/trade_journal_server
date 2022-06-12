@@ -28,11 +28,18 @@ export class UserService extends BaseService<UserEntity> {
 
     async handleRegister(user_dto: UserDTO) {
         const isExist = await this.userRepository.findOne({
-            email: user_dto.email
+            where: [
+                {
+                    email: user_dto.email
+                },
+                {
+                    username: user_dto.username
+                }
+            ]
         } as FindOneOptions<UserEntity>);
 
         if (isExist) {
-            throw new ErrorWithStatus(400, 'Email already exists');
+            throw new ErrorWithStatus(400, 'Either the email or the username already exists');
         }
 
         const hashedPassword = await bcrypt.hash(user_dto.password, 10);
@@ -48,27 +55,29 @@ export class UserService extends BaseService<UserEntity> {
     }
 
     async handleLoginUser(user_dto: UserDTO) {
-        let user: UserEntity | null | undefined = null;
-        if (user_dto.email) {
-            user = await this.userRepository.findOne({
-                email: user_dto.email
-            } as FindOneOptions<UserEntity>);
-        } else if (user_dto.username) {
-            user = await this.userRepository.findOne({
-                username: user_dto.username
-            } as FindOneOptions<UserEntity>);
-        }
+        const user = await this.userRepository.findOne({
+            where: [
+                {
+                    email: user_dto.email
+                },
+                {
+                    username: user_dto.username
+                }
+            ]
+        } as FindOneOptions<UserEntity>);
 
-        if (!user) throw new ErrorWithStatus(401, 'Invalid credentials');
-
+        if (!user)
+            throw new ErrorWithStatus(401, 'Invalid credentials');
         const is_matched = await bcrypt.compare(user_dto.password, user.hash);
-        if (is_matched) {
+        if (!is_matched)
+            throw new ErrorWithStatus(401, 'Invalid credentials');
+        else {
             const token = await createToken({ id: user.id });
 
             return {
                 access_token: token,
                 token_type: 'Bearer',
-                expires_in: 28800
+                expires_in: 288000000
             };
         }
     }

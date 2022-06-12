@@ -8,19 +8,15 @@ import {
 
 // Utils
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
-import { capitalize } from '@utils/functions';
 import { FindOneOptions } from 'typeorm';
 
 export class BaseService<T extends BaseEntity> {
 
-    private entity_type: string;
+    private readonly repository: BaseRepository<T>;
 
-    constructor(private readonly repository: BaseRepository<T>) {
-        this.entity_type = capitalize(this.repository.metadata.tableName);
-    }
-
-    async findOne(entity_id: number): Promise<T | null> {
-        return await this.repository.findOne({ id: entity_id } as FindOneOptions<T>);
+    async findOne(entity_id: number): Promise<T | null | undefined> {
+        const entity = this.repository.findOne({ id: entity_id } as FindOneOptions<T>);
+        return entity;
     }
 
     async delete(entity_id: number) {
@@ -28,17 +24,17 @@ export class BaseService<T extends BaseEntity> {
 
         try {
             await this.repository.softDelete(entity_id);
-            return `${this.entity_type} with id ${entity_id} was deleted`;
+            return `Entity ${entity_id} was deleted`;
         } catch (ex: unknown) {
             console.log(ex);
-            throw new ErrorWithStatus(400, `${this.entity_type} with id ${entity_id} could not be deleted`);
+            throw new ErrorWithStatus(400, `Entity ${entity_id} could not be deleted`);
         }
     }
 
     async findOneOrFail(entity_id: number): Promise<T> {
         const entity = await this.findOne(entity_id);
         if (!entity) {
-            throw new ErrorWithStatus(404, `${this.entity_type} with id ${entity_id} was not found`);
+            throw new ErrorWithStatus(404, `Entity ${entity_id} was not found`);
         }
         return entity;
     }

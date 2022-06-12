@@ -19,5 +19,8 @@ export default (app: Application) => {
 
 export const ErrorHandler = (err: ErrorWithStatus, _req: Request, res: Response, _next: NextFunction) => {
     console.error(err.stack);
-    res.status(err.status).send(err.message);
+    res.status(err.status).json({
+        status: err.status,
+        message: err.message
+    });
 };

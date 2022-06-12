@@ -18,7 +18,7 @@ export class OutcomeService extends BaseService<OutcomeEntity> {
     private outcomeRepository: OutcomeRepository;
 
     constructor() {
-        super(getCustomRepository(OutcomeRepository));
+        super();
         this.outcomeRepository = getCustomRepository(OutcomeRepository);
     }
 

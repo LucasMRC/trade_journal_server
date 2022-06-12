@@ -18,7 +18,7 @@ export class AssetService extends BaseService<AssetEntity> {
     private assetRepository: AssetRepository;
 
     constructor() {
-        super(getCustomRepository(AssetRepository));
+        super();
         this.assetRepository = getCustomRepository(AssetRepository);
     }
 

@@ -54,8 +54,6 @@ export class UserService extends BaseService<UserEntity> {
         } as UserEntity);
 
         this.userRepository.save(user);
-
-        return user;
     }
 
     async handleLoginUser(user_dto: UserDTO) {

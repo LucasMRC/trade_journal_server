@@ -12,7 +12,9 @@ import { BaseRepository } from '@modules/base';
 export class SymbolRepository extends BaseRepository<SymbolEntity> {
 
     async createNew(symbol_name: string, asset: AssetEntity) {
-        const newSymbol: SymbolEntity = new SymbolEntity(symbol_name, asset);
+        const newSymbol: SymbolEntity = new SymbolEntity();
+        newSymbol.name = symbol_name;
+        newSymbol.asset = asset;
         await this.save(newSymbol);
         return plainToInstance(SymbolEntity, newSymbol);
     }

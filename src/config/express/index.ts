@@ -14,10 +14,16 @@ export default (app: Application) => {
     app.use(helmet());
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
-    app.use(cors());
+    app.use(cors({
+        origin: '*',
+        exposedHeaders: [ 'Authorization' ]
+    } as cors.CorsOptions));
 };
 
 export const ErrorHandler = (err: ErrorWithStatus, _req: Request, res: Response, _next: NextFunction) => {
     console.error(err.stack);
-    res.status(err.status).send(err.message);
+    res.status(err.status).json({
+        status: err.status,
+        message: err.message
+    });
 };

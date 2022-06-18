@@ -18,7 +18,7 @@ export class TimeframeService extends BaseService<TimeframeEntity> {
     private timeframeRepository: TimeframeRepository;
 
     constructor() {
-        super(getCustomRepository(TimeframeRepository));
+        super(TimeframeEntity);
         this.timeframeRepository = getCustomRepository(TimeframeRepository);
     }
 

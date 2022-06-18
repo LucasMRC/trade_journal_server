@@ -5,7 +5,7 @@ dotenv.config();
 
 // Packages
 import express from 'express';
-import { createConnection } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 // Config
 import { connectionConfig } from '@config/database';
@@ -15,24 +15,25 @@ import configRoutes from '@config/routes';
 
 const PORT = process.env.SERVER_PORT;
 
-createConnection(connectionConfig)
-    .then(() => {
-        console.log('🔌[database] Database connected.');
+export const connection = new DataSource(connectionConfig);
 
-        configCloudinary()
-            .then(() => console.log('☁️ [cloudinary] Cloudinary connected.'));
+connection.initialize().then(() => {
+    console.log('🔌[database] Database connected.');
 
-        const app = express();
+    configCloudinary()
+        .then(() => console.log('☁️ [cloudinary] Cloudinary connected.'));
 
-        configExpress(app);
-        configRoutes(app);
+    const app = express();
 
-        app.use(ErrorHandler);
+    configExpress(app);
+    configRoutes(app);
 
-        app.listen(PORT, () => {
-            console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
-        });
+    app.use(ErrorHandler);
 
-    }).catch(error => {
-        console.log(error);
+    app.listen(PORT, () => {
+        console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
     });
+
+}).catch(error => {
+    console.log(error);
+});

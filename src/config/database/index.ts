@@ -1,4 +1,4 @@
-import { ConnectionOptions } from 'typeorm';
+import { DataSourceOptions } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 // Modules
@@ -14,7 +14,7 @@ import { CurrencyEntity } from '@modules/currency';
 import { BlowUpEntity } from '@modules/blow_up/models/blow_up.entity';
 import { UserEntity } from '@modules/user/models/user.entity';
 
-export const connectionConfig: ConnectionOptions = {
+export const connectionConfig: DataSourceOptions = {
     type: 'mysql',
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),

@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "App.js",
+  "engines": {
+    "node": "18.3.0"
+  },
   "scripts": {
     "start": "node ./dist/App.js",
     "dev": "node_modules/.bin/ts-node-dev -r tsconfig-paths/register --respawn --notify false --prefer-ts --ignore-watch node_modules -- App.ts ",

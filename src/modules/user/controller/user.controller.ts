@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import { UserService } from '../service/user.service';
-import { UserDTO, TokenDTO } from '@modules/user';
+import { UserDTO, TokenDTO, UserLoginDto } from '@modules/user';
 
 
 export const getUser = async (req: Request, res: Response, next: CallableFunction) => {
@@ -27,7 +27,7 @@ export const register = async (req: Request, res: Response, next: CallableFuncti
 };
 
 export const loginUser = async (req: Request, res: Response, next: CallableFunction) => {
-    const user_dto = req.body as UserDTO;
+    const user_dto = req.body as UserLoginDto;
     const userService = container.resolve(UserService);
     try {
         const { access_token, expires_in } = await userService.handleLoginUser(user_dto);

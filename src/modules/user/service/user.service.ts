@@ -1,17 +1,24 @@
 
 import { injectable } from 'tsyringe';
 import { FindOneOptions } from 'typeorm';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
+import { connection } from 'App';
 
 // Modules
 import { BaseService } from '@modules/base';
-import { UserEntity, UserRepository, UserDTO, TokenDTO } from '@modules/user';
+import {
+    UserEntity,
+    UserRepository,
+    UserDTO,
+    TokenDTO,
+    UserLoginDto,
+    UserProjection
+} from '@modules/user';
 
 // Utils
 import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 import { createToken } from '@utils/auth';
 import { cache } from '@utils/auth/cache';
-import { connection } from 'App';
 
 @injectable()
 export class UserService extends BaseService<UserEntity> {
@@ -27,10 +34,10 @@ export class UserService extends BaseService<UserEntity> {
 
     async getUser(id: number) {
         const user = await this.findOneOrFail(id);
-        return user;
+        return new UserProjection(user);
     }
 
-    async handleRegister(user_dto: UserDTO) {
+    async handleRegister(user_dto: UserDTO): Promise<UserProjection> {
         const isExist = await this.userRepository.findOne({
             where: [
                 {
@@ -43,7 +50,7 @@ export class UserService extends BaseService<UserEntity> {
         } as FindOneOptions<UserEntity>);
 
         if (isExist) {
-            throw new ErrorWithStatus(400, 'Either the email or the username already exists');
+            throw new ErrorWithStatus(400, 'Either the email or the username is already in use');
         }
 
         const hashedPassword = await bcrypt.hash(user_dto.password, 10);
@@ -53,24 +60,23 @@ export class UserService extends BaseService<UserEntity> {
             hash: hashedPassword
         } as UserEntity);
 
-        this.userRepository.save(user);
+        const newUser = await this.userRepository.save(user);
+
+        return new UserProjection(newUser);
     }
 
-    async handleLoginUser(user_dto: UserDTO) {
+    async handleLoginUser(login_dto: UserLoginDto) {
         const user = await this.userRepository.findOne({
             where: [
                 {
-                    email: user_dto.email
-                },
-                {
-                    username: user_dto.username
+                    email: login_dto.email
                 }
             ]
         } as FindOneOptions<UserEntity>);
 
         if (!user)
             throw new ErrorWithStatus(401, 'Invalid credentials');
-        const is_matched = await bcrypt.compare(user_dto.password, user.hash);
+        const is_matched = await bcrypt.compare(login_dto.password, user.hash);
         if (!is_matched)
             throw new ErrorWithStatus(401, 'Invalid credentials');
         else {

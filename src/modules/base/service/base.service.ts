@@ -1,4 +1,3 @@
-import { instanceToInstance } from 'class-transformer';
 import { FindOptionsWhere } from 'typeorm';
 import { connection } from 'App';
 
@@ -30,7 +29,7 @@ export class BaseService<T extends BaseEntity> {
             id: entity_id
         } as unknown as FindOptionsWhere<T>);
 
-        return instanceToInstance(entity);
+        return entity;
     }
 
     async delete(entity_id: number) {
@@ -55,7 +54,7 @@ export class BaseService<T extends BaseEntity> {
 
     async findAll(): Promise<T[]> {
         const entities = await this.repository.find();
-        return instanceToInstance(entities);
+        return entities;
     }
 
 }

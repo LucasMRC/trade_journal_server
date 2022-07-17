@@ -1,5 +1,3 @@
-import { EntityRepository } from 'typeorm';
-import { instanceToInstance } from 'class-transformer';
 import { injectable } from 'tsyringe';
 
 // Modules
@@ -11,7 +9,6 @@ import { BaseRepository } from '@modules/base';
 import { DateTransformer } from '@utils/transformers';
 
 @injectable()
-@EntityRepository(WithdrawalEntity)
 export class WithdrawalRepository extends BaseRepository<WithdrawalEntity> {
 
     async createNew(withdrawalDTO: WithdrawalDTO, platform: PlatformEntity) {
@@ -23,7 +20,7 @@ export class WithdrawalRepository extends BaseRepository<WithdrawalEntity> {
             date: date || default_date_value
         });
         await this.save(new_withdrawal);
-        return instanceToInstance(new_withdrawal);
+        return new_withdrawal;
     }
 
     async updateWithdrawal(withdrawal_id: number, withdrawalDTO: Partial<WithdrawalDTO>) {

@@ -1,5 +1,5 @@
 import { injectable, container } from 'tsyringe';
-import { getCustomRepository } from 'typeorm';
+import { connection } from 'App';
 
 // Modules
 import {
@@ -21,7 +21,10 @@ export class WithdrawalService extends BaseService<WithdrawalEntity> {
 
     constructor() {
         super(WithdrawalEntity);
-        this.withdrawalRepository = getCustomRepository(WithdrawalRepository);
+        this.withdrawalRepository = new WithdrawalRepository(
+            WithdrawalEntity,
+            connection.createEntityManager()
+        );
         this.platformService = container.resolve(PlatformService);
     }
 

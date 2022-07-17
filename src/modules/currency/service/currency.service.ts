@@ -1,5 +1,5 @@
 import { injectable } from 'tsyringe';
-import { getCustomRepository } from 'typeorm';
+import { connection } from 'App';
 
 // Modules
 import {
@@ -19,7 +19,10 @@ export class CurrencyService extends BaseService<CurrencyEntity> {
 
     constructor() {
         super(CurrencyEntity);
-        this.currencyRepository = getCustomRepository(CurrencyRepository);
+        this.currencyRepository = new CurrencyRepository(
+            CurrencyEntity,
+            connection.createEntityManager()
+        );
     }
 
     async createNewCurrency(currencyDTO: CurrencyDTO) {

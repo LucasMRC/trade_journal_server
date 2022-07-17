@@ -1,5 +1,3 @@
-import { EntityRepository } from 'typeorm';
-import { instanceToInstance } from 'class-transformer';
 import { injectable } from 'tsyringe';
 
 // Modules
@@ -10,7 +8,6 @@ import { TimeframeEntity } from '@modules/timeframe';
 import { BaseRepository } from '@modules/base';
 
 @injectable()
-@EntityRepository(TradeEntity)
 export class TradeRepository extends BaseRepository<TradeEntity> {
 
     async createNew(tradeDTO: TradeDTO, platform: PlatformEntity, symbol: SymbolEntity, timeframe: TimeframeEntity) {
@@ -21,7 +18,7 @@ export class TradeRepository extends BaseRepository<TradeEntity> {
             timeframe
         });
         await this.save(newTrade);
-        return instanceToInstance(newTrade);
+        return newTrade;
     }
 
     async updateTrade(trade_id: number, tradeDTO: Partial<TradeDTO>) {

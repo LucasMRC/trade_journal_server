@@ -1,5 +1,5 @@
 import { injectable, container } from 'tsyringe';
-import { getCustomRepository } from 'typeorm';
+import { connection } from 'App';
 
 // Modules
 import {
@@ -22,7 +22,10 @@ export class TradeService extends BaseService<TradeEntity> {
 
     constructor() {
         super(TradeEntity);
-        this.tradeRepository = getCustomRepository(TradeRepository);
+        this.tradeRepository = new TradeRepository(
+            TradeEntity,
+            connection.createEntityManager()
+        );
         this.platformService = container.resolve(PlatformService);
         this.timeframeService = container.resolve(TimeframeService);
         this.symbolService = container.resolve(SymbolService);

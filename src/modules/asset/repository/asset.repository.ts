@@ -1,5 +1,4 @@
 import { EntityRepository } from 'typeorm';
-import { plainToInstance } from 'class-transformer';
 import { injectable } from 'tsyringe';
 
 // Modules
@@ -13,7 +12,7 @@ export class AssetRepository extends BaseRepository<AssetEntity> {
 
     async createNew(assetDTO: AssetDTO) {
         const new_asset: AssetEntity = await this.save(assetDTO);
-        return plainToInstance(AssetEntity, new_asset);
+        return new_asset;
     }
 
     async updateAsset(asset_id: number, assetDTO: Partial<AssetDTO>) {

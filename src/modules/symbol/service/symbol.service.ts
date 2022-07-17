@@ -1,5 +1,5 @@
-import { getCustomRepository } from 'typeorm';
 import { injectable, container } from 'tsyringe';
+import { connection } from 'App';
 
 // Modules
 import { SymbolDTO, SymbolRepository, SymbolEntity } from '@modules/symbol';
@@ -17,7 +17,10 @@ export class SymbolService extends BaseService<SymbolEntity> {
 
     constructor() {
         super(SymbolEntity);
-        this.symbolRepository = getCustomRepository(SymbolRepository);
+        this.symbolRepository = new SymbolRepository(
+            SymbolEntity,
+            connection.createEntityManager()
+        );
         this.assetService = container.resolve(AssetService);
     }
 

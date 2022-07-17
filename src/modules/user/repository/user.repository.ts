@@ -1,4 +1,3 @@
-import { instanceToInstance } from 'class-transformer';
 import { injectable } from 'tsyringe';
 
 // Modules
@@ -12,6 +11,7 @@ export class UserRepository extends BaseRepository<UserEntity> {
     async findUserByUsername(username: string) {
         const user = await this.findOne({ username } as FindOneOptions<UserEntity>);
 
-        return instanceToInstance(user);
+        return user;
     }
+
 }

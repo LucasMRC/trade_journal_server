@@ -1,5 +1,3 @@
-import { EntityRepository } from 'typeorm';
-import { instanceToInstance, plainToInstance } from 'class-transformer';
 import { injectable } from 'tsyringe';
 
 // Modules
@@ -8,15 +6,15 @@ import { AssetEntity } from '@modules/asset';
 import { BaseRepository } from '@modules/base';
 
 @injectable()
-@EntityRepository(SymbolEntity)
 export class SymbolRepository extends BaseRepository<SymbolEntity> {
 
-    async createNew(symbol_name: string, asset: AssetEntity) {
+    async createNew(name: string, asset: AssetEntity) {
         const newSymbol: SymbolEntity = new SymbolEntity();
-        newSymbol.name = symbol_name;
+        newSymbol.name = name;
         newSymbol.asset = asset;
+
         await this.save(newSymbol);
-        return plainToInstance(SymbolEntity, newSymbol);
+        return newSymbol;
     }
 
     async fetchSymbols() {
@@ -25,7 +23,7 @@ export class SymbolRepository extends BaseRepository<SymbolEntity> {
                 'asset'
             ]
         });
-        return instanceToInstance(symbols);
+        return symbols;
     }
 
     async updateSymbol(symbol_id: number, symbolDTO: Partial<SymbolDTO>) {

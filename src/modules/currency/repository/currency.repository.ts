@@ -1,5 +1,4 @@
 import { EntityRepository } from 'typeorm';
-import { plainToInstance } from 'class-transformer';
 import { injectable } from 'tsyringe';
 
 // Modules
@@ -12,7 +11,7 @@ export class CurrencyRepository extends BaseRepository<CurrencyEntity> {
 
     async createNew(currencyDTO: CurrencyDTO) {
         const new_currency: CurrencyEntity = await this.save(currencyDTO);
-        return plainToInstance(CurrencyEntity, new_currency);
+        return new_currency;
     }
 
     async updateCurrency(currency_id: number, currencyDTO: Partial<CurrencyDTO>) {

@@ -1,5 +1,4 @@
 import { EntityRepository } from 'typeorm';
-import { instanceToInstance } from 'class-transformer';
 import { injectable } from 'tsyringe';
 
 // Modules
@@ -23,7 +22,7 @@ export class DepositRepository extends BaseRepository<DepositEntity> {
             date: date || default_date_value
         });
         await this.save(new_deposit);
-        return instanceToInstance(new_deposit);
+        return new_deposit;
     }
 
     async updateDeposit(deposit_id: number, depositDTO: Partial<DepositDTO>) {

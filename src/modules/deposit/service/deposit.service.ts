@@ -1,5 +1,5 @@
 import { injectable, container } from 'tsyringe';
-import { getCustomRepository } from 'typeorm';
+import { connection } from 'App';
 
 // Modules
 import {
@@ -18,7 +18,10 @@ export class DepositService extends BaseService<DepositEntity> {
 
     constructor() {
         super(DepositEntity);
-        this.depositRepository = getCustomRepository(DepositRepository);
+        this.depositRepository = new DepositRepository(
+            DepositEntity,
+            connection.createEntityManager()
+        );
         this.platformService = container.resolve(PlatformService);
     }
 

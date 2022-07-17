@@ -1,6 +1,5 @@
-import { getCustomRepository } from 'typeorm';
 import { injectable } from 'tsyringe';
-import { instanceToInstance } from 'class-transformer';
+import { connection } from 'App';
 
 // Modules
 import { PlatformDTO, PlatformRepository, PlatformEntity } from '@modules/platform';
@@ -16,7 +15,10 @@ export class PlatformService extends BaseService<PlatformEntity> {
 
     constructor() {
         super(PlatformEntity);
-        this.platformRepository = getCustomRepository(PlatformRepository);
+        this.platformRepository = new PlatformRepository(
+            PlatformEntity,
+            connection.createEntityManager()
+        );
     }
 
     async createNewPlatform(platformDTO: PlatformDTO) {
@@ -42,7 +44,7 @@ export class PlatformService extends BaseService<PlatformEntity> {
         await this.platformRepository.updatePlatform(platform_id, platformDTO);
 
         const updatedPlatform = this.findOne(platform_id);
-        return instanceToInstance(updatedPlatform);
+        return updatedPlatform;
 
     }
 

@@ -1,5 +1,5 @@
 import { injectable } from 'tsyringe';
-import { getCustomRepository } from 'typeorm';
+import { connection } from 'App';
 
 // Modules
 import {
@@ -19,7 +19,10 @@ export class OutcomeService extends BaseService<OutcomeEntity> {
 
     constructor() {
         super(OutcomeEntity);
-        this.outcomeRepository = getCustomRepository(OutcomeRepository);
+        this.outcomeRepository = new OutcomeRepository(
+            OutcomeEntity,
+            connection.createEntityManager()
+        );
     }
 
     async createNewOutcome(outcomeDTO: OutcomeDTO) {

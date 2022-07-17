@@ -1,5 +1,6 @@
 import { injectable } from 'tsyringe';
-import { FindOneOptions, getCustomRepository } from 'typeorm';
+import { FindOneOptions } from 'typeorm';
+import { connection } from 'App';
 
 // Modules
 import {
@@ -19,7 +20,10 @@ export class AssetService extends BaseService<AssetEntity> {
 
     constructor() {
         super(AssetEntity);
-        this.assetRepository = getCustomRepository(AssetRepository);
+        this.assetRepository = new AssetRepository(
+            AssetEntity,
+            connection.createEntityManager()
+        );
     }
 
     async createNewAsset(assetDTO: AssetDTO) {

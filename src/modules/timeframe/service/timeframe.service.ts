@@ -1,5 +1,5 @@
 import { injectable } from 'tsyringe';
-import { getCustomRepository } from 'typeorm';
+import { connection } from 'App';
 
 // Modules
 import {
@@ -19,7 +19,10 @@ export class TimeframeService extends BaseService<TimeframeEntity> {
 
     constructor() {
         super(TimeframeEntity);
-        this.timeframeRepository = getCustomRepository(TimeframeRepository);
+        this.timeframeRepository = new TimeframeRepository(
+            TimeframeEntity,
+            connection.createEntityManager()
+        );
     }
 
     async createNewTimeframe(timeframeDTO: TimeframeDTO) {

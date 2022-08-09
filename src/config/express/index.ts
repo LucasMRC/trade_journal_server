@@ -7,8 +7,16 @@ import express, {
 import cors from 'cors';
 import helmet from 'helmet';
 
-// Utils
-import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
+// Errors
+import {
+    ObjectAlreadyExistsError,
+    ObjectNotFoundError,
+    InternalServerError,
+    ObjectNotValidError,
+    UnauthorizedError
+} from '@utils/errors';
+
+type CustomError = ObjectAlreadyExistsError | ObjectNotFoundError | InternalServerError | ObjectNotValidError | UnauthorizedError;
 
 export default (app: Application) => {
     app.use(helmet());
@@ -20,10 +28,17 @@ export default (app: Application) => {
     } as cors.CorsOptions));
 };
 
-export const ErrorHandler = (err: ErrorWithStatus, _req: Request, res: Response, _next: NextFunction) => {
+export const ErrorHandler = (err: CustomError, _req: Request, res: Response, _next: NextFunction) => {
     console.error(err.stack);
-    res.status(err.status).json({
-        status: err.status,
-        message: err.message
-    });
+    if ('status' in err) {
+        res.status(err.status).json({
+            status: err.status,
+            message: err.message
+        });
+    } else {
+        res.status(500).json({
+            status: 500,
+            message: 'Internal Server Error'
+        });
+    }
 };

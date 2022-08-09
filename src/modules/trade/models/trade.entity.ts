@@ -19,7 +19,6 @@ import { DateTransformer, DecimalTransformer } from '@utils/transformers';
 @Entity('trade')
 export class TradeEntity extends BaseEntity {
     @Column({
-        nullable: true,
         transformer: new DateTransformer()
     })
         start_date: Date;

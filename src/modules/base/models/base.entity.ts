@@ -4,17 +4,30 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
+import { DateTransformer } from '@utils/transformers';
 
 export abstract class BaseEntity {
     @PrimaryGeneratedColumn()
         id: number;
 
-    @CreateDateColumn()
+    @CreateDateColumn({
+        transformer: new DateTransformer(),
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP'
+    })
         created_date?: Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({
+        transformer: new DateTransformer(),
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP'
+    })
         last_updated?: Date;
 
-    @DeleteDateColumn()
+    @DeleteDateColumn({
+        transformer: new DateTransformer(),
+        type: 'timestamp',
+        nullable: true
+    })
         deleted_at?: Date;
 }

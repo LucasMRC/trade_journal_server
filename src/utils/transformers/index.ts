@@ -16,6 +16,8 @@ export class DateTransformer implements ValueTransformer {
     }
 
     from(date: Date): string {
-        return date.toISOString().split('T')[0];
+        if (date instanceof Date)
+            return date.toISOString().split('T')[0];
+        return date;
     }
 }

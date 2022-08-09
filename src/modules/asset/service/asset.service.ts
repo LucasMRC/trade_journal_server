@@ -1,5 +1,4 @@
 import { injectable } from 'tsyringe';
-import { FindOneOptions } from 'typeorm';
 import { connection } from 'App';
 
 // Modules
@@ -10,8 +9,8 @@ import {
 } from '@modules/asset';
 import { BaseService } from '@modules/base';
 
-// Utils
-import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
+// Errors
+import { ObjectAlreadyExistsError } from '@utils/errors';
 
 @injectable()
 export class AssetService extends BaseService<AssetEntity> {
@@ -55,8 +54,8 @@ export class AssetService extends BaseService<AssetEntity> {
     }
 
     async failIfNameIsNotAvailable(asset_name: string) {
-        const asset = await this.assetRepository.findOne({ name: asset_name } as FindOneOptions<AssetEntity>);
-        if (asset) throw new ErrorWithStatus(400, `There's already an asset named ${asset_name}`);
+        const asset = await this.assetRepository.findOneBy({ name: asset_name });
+        if (asset) throw new ObjectAlreadyExistsError(`There's already an asset named ${asset_name}.`);
     }
 
 }

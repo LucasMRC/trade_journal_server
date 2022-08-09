@@ -4,8 +4,12 @@ import {
     JoinColumn,
     ManyToOne
 } from 'typeorm';
+
+// Modules
 import { BaseEntity } from '@modules/base';
 import { PlatformEntity } from '@modules/platform';
+
+// Utils
 import { DateTransformer, DecimalTransformer } from '@utils/transformers';
 
 @Entity('withdrawal')
@@ -19,7 +23,6 @@ export class WithdrawalEntity extends BaseEntity {
         amount: number;
 
     @Column({
-        nullable: true,
         transformer: new DateTransformer()
     })
         date: Date;

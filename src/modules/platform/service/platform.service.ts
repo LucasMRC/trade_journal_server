@@ -5,8 +5,8 @@ import { connection } from 'App';
 import { PlatformDTO, PlatformRepository, PlatformEntity } from '@modules/platform';
 import { BaseService } from '@modules/base';
 
-// Utils
-import ErrorWithStatus from '@src/utils/errors/ErrorWithStatus';
+// Errors
+import { ObjectAlreadyExistsError } from '@src/utils/errors';
 
 @injectable()
 export class PlatformService extends BaseService<PlatformEntity> {
@@ -49,13 +49,9 @@ export class PlatformService extends BaseService<PlatformEntity> {
     }
 
     private async failIfPlatformNameIsNotAvailable(platform_name: string) {
-        const platform = await this.platformRepository.findOne({
-            where: {
-                name: platform_name
-            }
-        });
+        const platform = await this.platformRepository.findOneBy({ name: platform_name });
 
-        if (platform) throw new ErrorWithStatus(400, `There's already a platform named ${platform_name}`);
+        if (platform) throw new ObjectAlreadyExistsError(`There's already a platform named ${platform_name}.`);
     }
 
 }

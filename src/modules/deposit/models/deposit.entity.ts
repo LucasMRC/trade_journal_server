@@ -23,7 +23,6 @@ export class DepositEntity extends BaseEntity {
         amount: number;
 
     @Column({
-        nullable: true,
         transformer: new DateTransformer()
     })
         date: Date;

@@ -9,8 +9,8 @@ import {
 } from '@modules/timeframe';
 import { BaseService } from '@modules/base';
 
-// Utils
-import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
+// Errors
+import { ObjectAlreadyExistsError } from '@utils/errors';
 
 @injectable()
 export class TimeframeService extends BaseService<TimeframeEntity> {
@@ -42,8 +42,7 @@ export class TimeframeService extends BaseService<TimeframeEntity> {
 
     async udpateTimeframe(timeframe_id: number, timeframeDTO: Partial<TimeframeDTO>) {
         const { name } = timeframeDTO;
-        if (name)
-            timeframeDTO.name = name.toUpperCase();
+        if (name) timeframeDTO.name = name.toUpperCase();
         this.findOneOrFail(timeframe_id);
 
         return await this.timeframeRepository.updateTimeframe(timeframe_id, timeframeDTO);
@@ -54,13 +53,9 @@ export class TimeframeService extends BaseService<TimeframeEntity> {
     }
 
     private async failIfTimeframeNameIsNotAvailable(timeframe_name: string) {
-        const timeframe = await this.timeframeRepository.findOne({
-            where: {
-                name: timeframe_name.toUpperCase()
-            }
-        });
+        const timeframe = await this.timeframeRepository.findOneBy({ name: timeframe_name.toUpperCase() });
 
-        if (timeframe) throw new ErrorWithStatus(400, `There's already an timeframe named ${timeframe_name}`);
+        if (timeframe) throw new ObjectAlreadyExistsError(`There's already an timeframe named ${timeframe_name}.`);
     }
 
 }

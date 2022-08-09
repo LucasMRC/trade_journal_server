@@ -9,8 +9,8 @@ import {
 } from '@modules/currency';
 import { BaseService } from '@modules/base';
 
-// Utils
-import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
+// Errors
+import { ObjectAlreadyExistsError } from '@utils/errors';
 
 @injectable()
 export class CurrencyService extends BaseService<CurrencyEntity> {
@@ -55,13 +55,9 @@ export class CurrencyService extends BaseService<CurrencyEntity> {
 
 
     private async failIfCurrencyNameIsNotAvailable(currency_name: string) {
-        const currency = await this.currencyRepository.findOne({
-            where: {
-                name: currency_name.toUpperCase()
-            }
-        });
+        const currency = await this.currencyRepository.findOneBy({ name: currency_name.toUpperCase() });
 
-        if (currency) throw new ErrorWithStatus(400, `There's already an currency named ${currency_name}`);
+        if (currency) throw new ObjectAlreadyExistsError(`There's already an currency named ${currency_name}.`);
     }
 
 }

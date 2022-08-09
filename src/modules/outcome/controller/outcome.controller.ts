@@ -3,15 +3,17 @@ import { NextFunction, Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 // Modules
-import { OutcomeDTO, OutcomeService } from '@modules/outcome';
+import { OutcomeDTO, OutcomeService, assertIsOutcomeDTO } from '@modules/outcome';
 
-// Utils
-import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
+// Errors
+import { ObjectNotValidError } from '@utils/errors';
 
 export const createNewOutcome = async (req: Request, res: Response, next: NextFunction) => {
-    const outcomeDTO: OutcomeDTO = req.body;
+    const outcomeDTO = req.body;
     const outcomeService = container.resolve(OutcomeService);
+
     try {
+        assertIsOutcomeDTO(outcomeDTO);
         const response = await outcomeService.createNewOutcome(outcomeDTO);
         res.send(response);
     } catch(ex: unknown) {
@@ -33,11 +35,12 @@ export const getOutcomes = async (_req: Request, res: Response, next: NextFuncti
 /* TODO: Add find filters */
 export const deleteOutcome = async (req: Request, res: Response, next: NextFunction) => {
     const { id: outcome_id } = req.params;
-    const id_as_number = Number(outcome_id);
-    if (!id_as_number) throw new ErrorWithStatus(300, 'Outcome id is not a valid number');
-
     const outcomeService = container.resolve(OutcomeService);
+
     try {
+        const id_as_number = Number(outcome_id);
+        if (!id_as_number) throw new ObjectNotValidError('Outcome id is not a valid number.');
+
         const response = await outcomeService.deleteOutcome(id_as_number);
         res.send(response);
     } catch(ex: unknown) {
@@ -48,12 +51,13 @@ export const deleteOutcome = async (req: Request, res: Response, next: NextFunct
 /* TODO: Add find filters */
 export const updateOutcome = async (req: Request, res: Response, next: NextFunction) => {
     const { id: outcome_id } = req.params;
-    const id_as_number = Number(outcome_id);
-    if (!id_as_number) throw new ErrorWithStatus(300, 'Outcome id is not a valid number');
-
     const outcomeDTO: Partial<OutcomeDTO> = req.body;
     const outcomeService = container.resolve(OutcomeService);
+
     try {
+        const id_as_number = Number(outcome_id);
+        if (!id_as_number) throw new ObjectNotValidError('Outcome id is not a valid number.');
+
         const response = await outcomeService.udpateOutcome(id_as_number, outcomeDTO);
         res.send(response);
     } catch(ex: unknown) {

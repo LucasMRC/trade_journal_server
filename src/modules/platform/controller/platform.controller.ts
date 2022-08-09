@@ -1,13 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
 import { PlatformService } from '../service/platform.service';
 import { container } from 'tsyringe';
-import { PlatformDTO } from '../models/platform.dto';
-import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
+
+// Modules
+import { assertIsPlatformDTO, PlatformDTO } from '@modules/platform';
+
+// Errors
+import { ObjectNotValidError } from '@utils/errors';
 
 export const createNewPlatform = async (req: Request, res: Response, next: NextFunction) => {
-    const platformDto: PlatformDTO = req.body;
+    const platformDto = req.body;
     const platformService = container.resolve(PlatformService);
+
     try {
+        assertIsPlatformDTO(platformDto);
         const response = await platformService.createNewPlatform(platformDto);
         res.send(response);
     } catch (ex) {
@@ -15,20 +21,25 @@ export const createNewPlatform = async (req: Request, res: Response, next: NextF
     }
 };
 
-export const getAllPlatforms = async (_req: Request, res: Response) => {
+export const getAllPlatforms = async (_req: Request, res: Response, next: NextFunction) => {
     const platformService = container.resolve(PlatformService);
 
-    const platforms = await platformService.getPlatforms();
-    res.send(platforms);
+    try {
+        const platforms = await platformService.getPlatforms();
+        res.send(platforms);
+    } catch (ex) {
+        next(ex);
+    }
 };
 
 export const deletePlatform = async (req: Request, res: Response, next: NextFunction) => {
     const { id: platform_id } = req.params;
-    const id_as_number = Number(platform_id);
-    if (!id_as_number) throw new ErrorWithStatus(400, 'Platform id is not a valid number');
-
     const platformService = container.resolve(PlatformService);
+
     try {
+        const id_as_number = Number(platform_id);
+        if (!id_as_number) throw new ObjectNotValidError('Platform id is not a valid number.');
+
         await platformService.deletePlatform(id_as_number);
         res.send('deleted');
     } catch (ex) {
@@ -39,17 +50,15 @@ export const deletePlatform = async (req: Request, res: Response, next: NextFunc
 export const updatePlatform = async (req: Request, res: Response, next: NextFunction) => {
     const { id: platform_id } = req.params;
     const platformDto: Partial<PlatformDTO> = req.body;
-
-    const id_as_number = Number(platform_id);
-    if (!id_as_number) throw new ErrorWithStatus(400, 'Platform id is not a valid number');
-
     const platformService = container.resolve(PlatformService);
+
     try {
+        const id_as_number = Number(platform_id);
+        if (!id_as_number) throw new ObjectNotValidError('Platform id is not a valid number.');
+
         const response = await platformService.updatePlatform(id_as_number, platformDto);
         res.send(response);
     } catch (ex) {
         next(ex);
     }
-    const platforms = await platformService.getPlatforms();
-    res.send({ platforms });
 };

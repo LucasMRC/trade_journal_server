@@ -1,13 +1,10 @@
-import { EntityRepository } from 'typeorm';
 import { injectable } from 'tsyringe';
 
 // Modules
-import { AssetEntity } from '@modules/asset/models/asset.entity';
-import { AssetDTO } from '@modules/asset/models/asset.dto';
+import { AssetEntity, AssetDTO } from '@modules/asset';
 import { BaseRepository } from '@modules/base';
 
 @injectable()
-@EntityRepository(AssetEntity)
 export class AssetRepository extends BaseRepository<AssetEntity> {
 
     async createNew(assetDTO: AssetDTO) {

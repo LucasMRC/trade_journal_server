@@ -9,8 +9,8 @@ import {
 } from '@modules/outcome';
 import { BaseService } from '@modules/base';
 
-// Utils
-import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
+// Errors
+import { ObjectAlreadyExistsError } from '@utils/errors';
 
 @injectable()
 export class OutcomeService extends BaseService<OutcomeEntity> {
@@ -42,8 +42,7 @@ export class OutcomeService extends BaseService<OutcomeEntity> {
 
     async udpateOutcome(outcome_id: number, outcomeDTO: Partial<OutcomeDTO>) {
         const { name } = outcomeDTO;
-        if (name)
-            outcomeDTO.name = name.toUpperCase();
+        if (name) outcomeDTO.name = name.toUpperCase();
 
         this.findOneOrFail(outcome_id);
         return await this.outcomeRepository.updateOutcome(outcome_id, outcomeDTO);
@@ -54,13 +53,9 @@ export class OutcomeService extends BaseService<OutcomeEntity> {
     }
 
     private async failIfOutcomeNameIsNotAvailable(outcome_name: string) {
-        const outcome = await this.outcomeRepository.findOne({
-            where: {
-                name: outcome_name.toUpperCase()
-            }
-        });
+        const outcome = await this.outcomeRepository.findOneBy({ name: outcome_name.toUpperCase() });
 
-        if (outcome) throw new ErrorWithStatus(400, `There's already an outcome named ${outcome_name}`);
+        if (outcome) throw new ObjectAlreadyExistsError(`There's already an outcome named ${outcome_name}.`);
     }
 
 }

@@ -3,15 +3,17 @@ import { Request, Response, NextFunction } from 'express';
 import { container } from 'tsyringe';
 
 // Modules
-import { TradeDTO, TradeService } from '@modules/trade';
+import { TradeDTO, TradeService, assertIsTradeDTO } from '@modules/trade';
 
-// Utils
-import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
+// Errors
+import { ObjectNotValidError } from '@utils/errors';
 
 export const createNewTrade = async (req: Request, res: Response, next: NextFunction) => {
-    const tradeDTO: TradeDTO = req.body;
+    const tradeDTO = req.body;
     const tradeService = container.resolve(TradeService);
+
     try {
+        assertIsTradeDTO(tradeDTO);
         const response = await tradeService.createNewTrade(tradeDTO);
         res.send(response);
     } catch(ex: unknown) {
@@ -22,6 +24,7 @@ export const createNewTrade = async (req: Request, res: Response, next: NextFunc
 /* TODO: Add find filters */
 export const getTrades = async (_req: Request, res: Response, next: NextFunction) => {
     const tradeService = container.resolve(TradeService);
+
     try {
         const response = await tradeService.getTrades();
         res.send(response);
@@ -33,11 +36,12 @@ export const getTrades = async (_req: Request, res: Response, next: NextFunction
 /* TODO: Add find filters */
 export const deleteTrade = async (req: Request, res: Response, next: NextFunction) => {
     const { id: trade_id } = req.params;
-    const id_as_number = Number(trade_id);
-    if (!id_as_number) throw new ErrorWithStatus(400, 'Trade id is not a valid number');
-
     const tradeService = container.resolve(TradeService);
+
     try {
+        const id_as_number = Number(trade_id);
+        if (!id_as_number) throw new ObjectNotValidError('Trade id is not a valid number.');
+
         const response = await tradeService.deleteTrade(id_as_number);
         res.send(response);
     } catch(ex: unknown) {
@@ -48,12 +52,13 @@ export const deleteTrade = async (req: Request, res: Response, next: NextFunctio
 /* TODO: Add find filters */
 export const updateTrade = async (req: Request, res: Response, next: NextFunction) => {
     const { id: trade_id } = req.params;
-    const id_as_number = Number(trade_id);
-    if (!id_as_number) throw new ErrorWithStatus(400, 'Trade id is not a valid number');
-
     const tradeDTO: Partial<TradeDTO> = req.body;
     const tradeService = container.resolve(TradeService);
+
     try {
+        const id_as_number = Number(trade_id);
+        if (!id_as_number) throw new ObjectNotValidError('Trade id is not a valid number.');
+
         const response = await tradeService.udpateTrade(id_as_number, tradeDTO);
         res.send(response);
     } catch(ex: unknown) {

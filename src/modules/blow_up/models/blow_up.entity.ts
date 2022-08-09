@@ -11,7 +11,6 @@ import { DateTransformer } from '@utils/transformers';
 @Entity('blow_up')
 export class BlowUpEntity extends BaseEntity {
     @Column({
-        nullable: true,
         transformer: new DateTransformer()
     })
         date: Date;

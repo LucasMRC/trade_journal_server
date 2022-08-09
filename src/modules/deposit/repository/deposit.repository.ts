@@ -1,4 +1,3 @@
-import { EntityRepository } from 'typeorm';
 import { injectable } from 'tsyringe';
 
 // Modules
@@ -10,7 +9,6 @@ import { BaseRepository } from '@modules/base';
 import { DateTransformer } from '@utils/transformers';
 
 @injectable()
-@EntityRepository(DepositEntity)
 export class DepositRepository extends BaseRepository<DepositEntity> {
 
     async createNew(depositDTO: DepositDTO, platform: PlatformEntity) {

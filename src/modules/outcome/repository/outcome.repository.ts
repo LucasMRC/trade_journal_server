@@ -1,4 +1,3 @@
-import { EntityRepository } from 'typeorm';
 import { injectable } from 'tsyringe';
 
 // Modules
@@ -6,7 +5,6 @@ import { OutcomeDTO, OutcomeEntity } from '@modules/outcome';
 import { BaseRepository } from '@modules/base';
 
 @injectable()
-@EntityRepository(OutcomeEntity)
 export class OutcomeRepository extends BaseRepository<OutcomeEntity> {
 
     async createNew(outcomeDTO: OutcomeDTO) {

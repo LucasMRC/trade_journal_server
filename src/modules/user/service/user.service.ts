@@ -1,6 +1,4 @@
-
 import { injectable } from 'tsyringe';
-import { FindOneOptions } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { connection } from 'App';
 
@@ -15,8 +13,10 @@ import {
     UserProjection
 } from '@modules/user';
 
+// Errors
+import { ObjectAlreadyExistsError, ObjectNotValidError } from '@utils/errors';
+
 // Utils
-import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
 import { createToken } from '@utils/auth';
 import { cache } from '@utils/auth/cache';
 
@@ -38,20 +38,17 @@ export class UserService extends BaseService<UserEntity> {
     }
 
     async handleRegister(user_dto: UserDTO): Promise<UserProjection> {
-        const isExist = await this.userRepository.findOne({
-            where: [
-                {
-                    email: user_dto.email
-                },
-                {
-                    username: user_dto.username
-                }
-            ]
-        } as FindOneOptions<UserEntity>);
+        const isExist = await this.userRepository.findOneBy([
+            {
+                email: user_dto.email
+            },
+            {
+                username: user_dto.username
+            }
+        ]
+        );
 
-        if (isExist) {
-            throw new ErrorWithStatus(400, 'Either the email or the username is already in use');
-        }
+        if (isExist) throw new ObjectAlreadyExistsError('Either the email or the username is already in use.');
 
         const hashedPassword = await bcrypt.hash(user_dto.password, 10);
         const user = await this.userRepository.create({
@@ -66,19 +63,13 @@ export class UserService extends BaseService<UserEntity> {
     }
 
     async handleLoginUser(login_dto: UserLoginDto) {
-        const user = await this.userRepository.findOne({
-            where: [
-                {
-                    email: login_dto.email
-                }
-            ]
-        } as FindOneOptions<UserEntity>);
+        const user = await this.userRepository.findOneBy({ email: login_dto.email });
 
-        if (!user)
-            throw new ErrorWithStatus(401, 'Invalid credentials');
+        if (!user) throw new ObjectNotValidError('Invalid credentials.');
+
         const is_matched = await bcrypt.compare(login_dto.password, user.hash);
-        if (!is_matched)
-            throw new ErrorWithStatus(401, 'Invalid credentials');
+        if (!is_matched) throw new ObjectNotValidError('Invalid credentials.');
+
         else {
             const token = await createToken({ id: user.id });
 

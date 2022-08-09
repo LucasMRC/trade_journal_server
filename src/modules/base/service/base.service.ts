@@ -7,8 +7,8 @@ import {
     BaseEntity
 } from '@modules/base';
 
-// Utils
-import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
+// Errors
+import { InternalServerError, ObjectNotFoundError } from '@utils/errors/index';
 
 export type ObjectType<T> = { new (): T } | (() => T);
 export class BaseService<T extends BaseEntity> {
@@ -37,17 +37,16 @@ export class BaseService<T extends BaseEntity> {
 
         try {
             await this.repository.softDelete(entity_id);
-            return `${this.type.name.replace('Entity', '')} was deleted`;
+            return `${this.type.name.replace('Entity', '')} was deleted.`;
         } catch (ex: unknown) {
-            console.log(ex);
-            throw new ErrorWithStatus(400, `${this.type.name.replace('Entity', '')} could not be deleted`);
+            throw new InternalServerError(`${this.type.name.replace('Entity', '')} could not be deleted.`);
         }
     }
 
     async findOneOrFail(entity_id: number): Promise<T> {
         const entity = await this.findOne(entity_id);
         if (!entity) {
-            throw new ErrorWithStatus(404, `${this.type.name.replace('Entity', '')} was not found`);
+            throw new ObjectNotFoundError(`${this.type.name.replace('Entity', '')} was not found.`);
         }
         return entity;
     }

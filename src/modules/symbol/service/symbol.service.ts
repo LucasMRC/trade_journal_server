@@ -6,8 +6,8 @@ import { SymbolDTO, SymbolRepository, SymbolEntity } from '@modules/symbol';
 import { AssetService } from '@modules/asset';
 import { BaseService } from '@modules/base';
 
-// Utils
-import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
+// Errors
+import { ObjectAlreadyExistsError } from '@utils/errors';
 
 @injectable()
 export class SymbolService extends BaseService<SymbolEntity> {
@@ -41,8 +41,7 @@ export class SymbolService extends BaseService<SymbolEntity> {
     async udpateSymbol(symbol_id: number, symbolDTO: Partial<SymbolDTO>) {
         const { name } = symbolDTO;
 
-        if (name)
-            symbolDTO.name = name.toUpperCase();
+        if (name) symbolDTO.name = name.toUpperCase();
 
         this.findOneOrFail(symbol_id);
         return await this.symbolRepository.updateSymbol(symbol_id, symbolDTO);
@@ -57,13 +56,9 @@ export class SymbolService extends BaseService<SymbolEntity> {
 
         const current_asset = await this.assetService.findOneOrFail(asset_id);
 
-        const symbol = await this.symbolRepository.findOne({
-            where: {
-                name: name.toUpperCase()
-            }
-        });
+        const symbol = await this.symbolRepository.findOneBy({ name: name.toUpperCase() });
 
-        if (symbol) throw new ErrorWithStatus(400, `There's already an symbol named ${name}`);
+        if (symbol) throw new ObjectAlreadyExistsError(`There's already an symbol named ${name}.`);
 
         return current_asset;
     }

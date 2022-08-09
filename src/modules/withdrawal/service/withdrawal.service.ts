@@ -10,8 +10,8 @@ import {
 import { PlatformService } from '@modules/platform';
 import { BaseService } from '@modules/base';
 
-// Utils
-import ErrorWithStatus from '@utils/errors/ErrorWithStatus';
+// Errors
+import { ObjectNotValidError } from '@utils/errors';
 
 @injectable()
 export class WithdrawalService extends BaseService<WithdrawalEntity> {
@@ -32,7 +32,7 @@ export class WithdrawalService extends BaseService<WithdrawalEntity> {
         const platform = await this.platformService.findOneOrFail(withdrawalDTO.platform_id);
 
         if (platform.current_amount < withdrawalDTO.amount)
-            throw new ErrorWithStatus(400, `The platform ${platform.name} doesn't have enough funds to withdraw ${withdrawalDTO.amount}`);
+            throw new ObjectNotValidError(`The platform ${platform.name} doesn't have enough funds to withdraw ${withdrawalDTO.amount}.`);
 
         /* Update current amount in the platform entity */
         platform.current_amount -= withdrawalDTO.amount;

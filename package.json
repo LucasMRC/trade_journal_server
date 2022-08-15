@@ -10,6 +10,7 @@
     "start": "node -r ./tsconfig-paths-bootstrap.js ./dist/App.js",
     "dev": "node_modules/.bin/ts-node-dev -r tsconfig-paths/register --respawn --notify false --prefer-ts --ignore-watch node_modules -- App.ts ",
     "build": "tsc -p ./",
+    "deploy": "npm run build && npm run start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "LucasMRC",

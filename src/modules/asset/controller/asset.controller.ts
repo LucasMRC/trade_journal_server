@@ -23,10 +23,10 @@ export const createNewAsset = async (req: Request, res: Response, next: NextFunc
 
 /* TODO: Add find filters */
 export const getAssets = async (_req: Request, res: Response, next: NextFunction) => {
-    const assetService = container.resolve(AssetService);
+    // const assetService = container.resolve(AssetService);
 
     try {
-        const response = await assetService.getAssets();
+        const response = 'Everything went fine';
         res.send(response);
     } catch(ex: unknown) {
         next(ex);

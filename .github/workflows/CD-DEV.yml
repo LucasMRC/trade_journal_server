@@ -20,10 +20,13 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
+      env:
+        QA_ENV_FILE: ${{ secrets.DEV_ENVs }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm i
+    - run: echo $QA_ENV_FILE > .env
     - run: npm run build
     - run: pm2 restart trade-journal

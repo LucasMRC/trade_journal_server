@@ -6,7 +6,9 @@ name: CD
 on:
   push:
     branches: [ "develop" ]
-
+defaults:
+  run:
+    working-directory: /home/ubuntu/TJS/
 jobs:
   build:
 
@@ -25,6 +27,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm i
-    - run: cat /home/ubuntu/.env.file > ./.env
     - run: npm run build
-    - run: npm run start &
+    - run: pm2 restart trade-journal

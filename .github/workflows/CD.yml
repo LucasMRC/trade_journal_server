@@ -11,6 +11,10 @@ jobs:
   build:
 
     runs-on: self-hosted
+    defaults:
+      run:
+        shell: bash
+        working-directory: "../../../../trade_journal_server"
 
     strategy:
       matrix:

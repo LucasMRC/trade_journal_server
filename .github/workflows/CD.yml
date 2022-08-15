@@ -14,7 +14,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: "../../../../trade_journal_server"
+        working-directory: "/home/ubuntu/trade_journal_server"
 
     strategy:
       matrix:
